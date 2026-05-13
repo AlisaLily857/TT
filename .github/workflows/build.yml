@@ -55,8 +55,15 @@ jobs:
       # --- macOS Signing (self-signed for testing) ---
       - name: Setup macOS certificate
         if: matrix.platform == 'macos-latest'
+        continue-on-error: true
+        env:
+          APPLE_CERT_B64: ${{ secrets.APPLE_CERTIFICATE }}
         run: |
-          echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 -d > /tmp/macos.p12
+          if [ -z "$APPLE_CERT_B64" ]; then
+            echo "No APPLE_CERTIFICATE secret set, skipping macOS signing setup"
+            exit 0
+          fi
+          echo "$APPLE_CERT_B64" | base64 -d > /tmp/macos.p12
           security create-keychain -p "omnibox" /tmp/omnibox.keychain
           security unlock-keychain -p "omnibox" /tmp/omnibox.keychain
           security import /tmp/macos.p12 -k /tmp/omnibox.keychain -P "omnibox" -T /usr/bin/codesign
@@ -67,9 +74,16 @@ jobs:
       # --- Windows Signing (self-signed for testing) ---
       - name: Setup Windows certificate
         if: matrix.platform == 'windows-latest'
+        continue-on-error: true
+        env:
+          WIN_CERT_B64: ${{ secrets.WINDOWS_CERTIFICATE }}
         run: |
-          $certBytes = [Convert]::FromBase64String("${{ secrets.WINDOWS_CERTIFICATE }}")
-          [IO.File]::WriteAllBytes("D:\\omnibox.pfx", $certBytes)
+          if (-not $env:WIN_CERT_B64) {
+            Write-Host "No WINDOWS_CERTIFICATE secret set, skipping Windows signing setup"
+            exit 0
+          }
+          $certBytes = [Convert]::FromBase64String($env:WIN_CERT_B64)
+          [IO.File]::WriteAllBytes("D:\omnibox.pfx", $certBytes)
 
       - name: Build Tauri
         uses: tauri-apps/tauri-action@v0
