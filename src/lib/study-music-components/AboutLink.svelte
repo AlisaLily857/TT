@@ -8,7 +8,7 @@
 
   let { variant = "inline", text }: Props = $props();
 
-  const url = "https://github.com/AlisaLily857/TT";
+  const url = "https://github.com/AlisaLily857/OmniBox";
 
   async function open() {
     try {

@@ -15,7 +15,7 @@ sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file lib
 Then:
 
 ```bash
-git clone https://github.com/AlisaLily857/TT.git
+git clone https://github.com/AlisaLily857/OmniBox.git
 cd omnibox
 pnpm install
 pnpm tauri dev

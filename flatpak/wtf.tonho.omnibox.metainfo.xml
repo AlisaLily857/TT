@@ -23,9 +23,9 @@
       <li>Queue management with concurrent downloads</li>
     </ul>
   </description>
-  <url type="homepage">https://github.com/AlisaLily857/TT</url>
-  <url type="bugtracker">https://github.com/AlisaLily857/TT/issues</url>
-  <url type="vcs-browser">https://github.com/AlisaLily857/TT</url>
+  <url type="homepage">https://github.com/AlisaLily857/OmniBox</url>
+  <url type="bugtracker">https://github.com/AlisaLily857/OmniBox/issues</url>
+  <url type="vcs-browser">https://github.com/AlisaLily857/OmniBox</url>
   <launchable type="desktop-id">wtf.tonho.omnibox.desktop</launchable>
   <provides>
     <binary>omnibox</binary>
@@ -33,7 +33,7 @@
   <screenshots>
     <screenshot type="default">
       <caption>Main download interface</caption>
-      <image>https://raw.githubusercontent.com/AlisaLily857/TT/main/flatpak/screenshots/main.png</image>
+      <image>https://raw.githubusercontent.com/AlisaLily857/OmniBox/main/flatpak/screenshots/main.png</image>
     </screenshot>
   </screenshots>
   <branding>

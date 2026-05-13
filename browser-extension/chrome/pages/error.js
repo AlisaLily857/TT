@@ -5,7 +5,7 @@ const params = new URLSearchParams(window.location.search);
 const code = params.get("code") ?? "LAUNCH_FAILED";
 const message = params.get("message") ?? "";
 const url = params.get("url") ?? "";
-const installUrl = params.get("installUrl") ?? "https://github.com/AlisaLily857/TT/releases/latest";
+const installUrl = params.get("installUrl") ?? "https://github.com/AlisaLily857/OmniBox/releases/latest";
 
 const eyebrow = document.getElementById("eyebrow");
 const title = document.getElementById("title");

@@ -12,10 +12,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/AlisaLily857/TT/releases/latest"><img src="https://img.shields.io/github/v/release/AlisaLily857/TT?style=for-the-badge&label=release" alt="Latest Release" /></a>
+  <a href="https://github.com/AlisaLily857/OmniBox/releases/latest"><img src="https://img.shields.io/github/v/release/AlisaLily857/OmniBox?style=for-the-badge&label=release" alt="Latest Release" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge" alt="License GPL-3.0" /></a>
-  <a href="https://github.com/AlisaLily857/TT/stargazers"><img src="https://img.shields.io/github/stars/AlisaLily857/TT?style=for-the-badge" alt="Stars" /></a>
-  <a href="https://github.com/AlisaLily857/TT/releases"><img src="https://img.shields.io/github/downloads/AlisaLily857/TT/total?style=for-the-badge&label=downloads" alt="Downloads" /></a>
+  <a href="https://github.com/AlisaLily857/OmniBox/stargazers"><img src="https://img.shields.io/github/stars/AlisaLily857/OmniBox?style=for-the-badge" alt="Stars" /></a>
+  <a href="https://github.com/AlisaLily857/OmniBox/releases"><img src="https://img.shields.io/github/downloads/AlisaLily857/OmniBox/total?style=for-the-badge&label=downloads" alt="Downloads" /></a>
   <a href="https://hosted.weblate.org/engage/omnibox/"><img src="https://hosted.weblate.org/widget/omnibox/frontend-json/svg-badge.svg" alt="Translation status" /></a>
 </p>
 
@@ -39,7 +39,7 @@
   <tr>
     <td><strong>Windows</strong></td>
     <td>
-      <a href="https://github.com/AlisaLily857/TT/releases/latest"><img alt="Download for Windows" src="https://img.shields.io/badge/Windows-Portable_EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white" height="40"></a>
+      <a href="https://github.com/AlisaLily857/OmniBox/releases/latest"><img alt="Download for Windows" src="https://img.shields.io/badge/Windows-Portable_EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white" height="40"></a>
       <br/>
       <sub>Download the <code>.exe</code> and double-click. No installer, no admin needed.</sub>
     </td>
@@ -47,7 +47,7 @@
   <tr>
     <td><strong>macOS</strong></td>
     <td>
-      <a href="https://github.com/AlisaLily857/TT/releases/latest"><img alt="Download for macOS" src="https://img.shields.io/badge/macOS-DMG-000000?style=for-the-badge&logo=apple&logoColor=white" height="40"></a>
+      <a href="https://github.com/AlisaLily857/OmniBox/releases/latest"><img alt="Download for macOS" src="https://img.shields.io/badge/macOS-DMG-000000?style=for-the-badge&logo=apple&logoColor=white" height="40"></a>
       <br/>
       <sub>Open the <code>.dmg</code> and drag OmniBox to Applications.</sub>
     </td>
@@ -55,7 +55,7 @@
   <tr>
     <td><strong>Linux</strong></td>
     <td>
-      <a href="https://github.com/AlisaLily857/TT/releases/latest"><img alt="Download Flatpak" src="https://img.shields.io/badge/Linux-Flatpak-FFAA33?style=for-the-badge&logo=linux&logoColor=white" height="40"></a>
+      <a href="https://github.com/AlisaLily857/OmniBox/releases/latest"><img alt="Download Flatpak" src="https://img.shields.io/badge/Linux-Flatpak-FFAA33?style=for-the-badge&logo=linux&logoColor=white" height="40"></a>
       <br/>
       <sub><code>flatpak install wtf.tonho.omnibox</code> — or grab the bundle from Releases.</sub>
     </td>
@@ -172,7 +172,7 @@ For music: point at a folder, and the library is yours.
 For developers. If you just want to use OmniBox, [grab a release](#get-omnibox).
 
 ```bash
-git clone https://github.com/AlisaLily857/TT.git
+git clone https://github.com/AlisaLily857/OmniBox.git
 cd omnibox
 pnpm install
 pnpm tauri dev
@@ -209,7 +209,7 @@ Production build: `pnpm tauri build`.
 
 ## Contribute
 
-Bug or feature idea? [Open an issue](https://github.com/AlisaLily857/TT/issues). Pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Bug or feature idea? [Open an issue](https://github.com/AlisaLily857/OmniBox/issues). Pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 OmniBox is translated on [Weblate](https://hosted.weblate.org/engage/omnibox/). Pick a language, translate in your browser, Weblate opens a pull request automatically.
 

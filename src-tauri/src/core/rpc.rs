@@ -9,7 +9,7 @@ use serde_json::{json, Value};
 pub use omniget_core::models::settings::RpcSettings;
 
 const GITHUB_BUTTON_LABEL: &str = "View on GitHub";
-const GITHUB_BUTTON_URL: &str = "https://github.com/AlisaLily857/TT";
+const GITHUB_BUTTON_URL: &str = "https://github.com/AlisaLily857/OmniBox";
 const APP_LARGE_TEXT: &str = "omnibox";
 
 const SOURCE_PRIORITIES: &[&str] = &["focus", "music", "video", "course", "reading"];
