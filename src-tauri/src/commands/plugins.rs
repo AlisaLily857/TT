@@ -198,7 +198,7 @@ pub async fn plugin_command(
 }
 
 const REGISTRY_URL: &str =
-    "https://raw.githubusercontent.com/AlisaLily857/TT-plugins/main/plugins.json";
+    "https://raw.githubusercontent.com/AlisaLily857/omnibox-plugins/main/plugins.json";
 
 #[derive(Debug, Serialize)]
 pub struct MarketplaceEntry {
@@ -394,7 +394,7 @@ pub async fn install_plugin_from_registry(
     install_plugin_zip_from_repo(&state.inner().clone(), plugin_id, repo).await
 }
 
-const DEFAULT_PLUGINS: &[(&str, &str)] = &[("study", "tonhowtf/omniget-study-release")];
+const DEFAULT_PLUGINS: &[(&str, &str)] = &[("study", "AlisaLily857/omnibox-study-release")];
 
 pub async fn ensure_default_plugins(state: Arc<tokio::sync::RwLock<PluginManager>>) {
     for (plugin_id, repo) in DEFAULT_PLUGINS {
