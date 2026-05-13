@@ -54,10 +54,34 @@ jobs:
       - name: Install frontend dependencies
         run: pnpm install
 
+      # --- macOS Signing (self-signed for testing) ---
+      - name: Setup macOS certificate
+        if: matrix.platform == 'macos-latest'
+        run: |
+          echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 -d > /tmp/macos.p12
+          security create-keychain -p "tipics-tt" /tmp/tipics-tt.keychain
+          security unlock-keychain -p "tipics-tt" /tmp/tipics-tt.keychain
+          security import /tmp/macos.p12 -k /tmp/tipics-tt.keychain -P "tipics-tt" -T /usr/bin/codesign
+          security set-keychain-settings -t 3600 -u /tmp/tipics-tt.keychain
+          security list-keychains -s /tmp/tipics-tt.keychain
+          security default-keychain -s /tmp/tipics-tt.keychain
+
+      # --- Windows Signing (self-signed for testing) ---
+      - name: Setup Windows certificate
+        if: matrix.platform == 'windows-latest'
+        run: |
+          $certBytes = [Convert]::FromBase64String("${{ secrets.WINDOWS_CERTIFICATE }}")
+          [IO.File]::WriteAllBytes("D:\\tipics-tt.pfx", $certBytes)
+
       - name: Build Tauri
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_CERTIFICATE: /tmp/macos.p12
+          APPLE_CERTIFICATE_PASSWORD: tipics-tt
+          APPLE_SIGNING_IDENTITY: 'TIPICS-tt'
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: tipics-tt
         with:
           tagName: v__VERSION__
           releaseName: 'TIPICS-tt v__VERSION__'
