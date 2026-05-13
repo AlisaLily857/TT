@@ -101,7 +101,8 @@
     "external_url_queued": "Descarga añadida desde la extensión de Chrome",
     "file_copied_to_clipboard": "Archivo copiado al portapapeles",
     "drm_skipped": "{{count}} vídeo(s) omitidos — protegidos por DRM (FairPlay/SAMPLE-AES)",
-    "generic_download_complete": "{{name}} — ¡descarga completa!"
+    "generic_download_complete": "{{name}} — ¡descarga completa!",
+    "auto_download_started": "Auto-download started"
   },
   "telegram": {
     "title": "Telegram",
@@ -252,7 +253,9 @@
       "copy_to_clipboard_on_hotkey_desc": "Copia automáticamente el archivo descargado al portapapeles para pegarlo fácilmente",
       "filename_template": "Plantilla de nombre de archivo",
       "filename_template_desc": "Plantilla de salida yt-dlp para los archivos descargados",
-      "filename_template_preview": "Vista previa: {{preview}}"
+      "filename_template_preview": "Vista previa: {{preview}}",
+      "auto_download_on_paste": "Auto-download on paste",
+      "auto_download_on_paste_desc": "Start downloading instantly when a URL is detected in the clipboard"
     },
     "update_available": "OmniBox {{version}} está disponible",
     "update_button": "actualizar ahora",
@@ -335,7 +338,9 @@
       "torrent_listen_port": "Puerto de escucha de torrent",
       "torrent_listen_port_desc": "Puerto TCP para conexiones BitTorrent entrantes",
       "cookies_from_browser": "Leer cookies directamente desde un perfil del navegador (avanzado)",
-      "cookies_from_browser_desc": "Solo actívalo si la extensión del navegador no funciona. La mayoría no necesita tocar esto."
+      "cookies_from_browser_desc": "Solo actívalo si la extensión del navegador no funciona. La mayoría no necesita tocar esto.",
+      "twitter_manual_cookie": "Manual cookie",
+      "twitter_manual_cookie_desc": "If a download fails, you can paste a manual Cookie header here and try again. This is not limited to Twitter/X. Example: sessionid=...; csrftoken=...; auth_token=..."
     },
     "cat_appearance": "Apariencia",
     "cat_typography": "Tipografía",
@@ -1273,7 +1278,6 @@
       "delete_confirm": "Eliminar",
       "eyebrow_playlist": "Playlist",
       "eyebrow_artist": "Artista",
-      "top_tracks": "Top pistas",
       "discography": "Discografía",
       "queue_title": "Cola",
       "queue_aria": "Cola de reproducción",
@@ -1403,7 +1407,6 @@
       "status_in_progress": "En curso",
       "status_not_started": "Sin empezar",
       "status_completed": "Completados",
-      "view_mode_aria": "Modo de vista",
       "status_aria": "Estado",
       "cleanup_btn": "Limpiar entradas huérfanas",
       "cleanup_orphan_delete": "Eliminar archivo",
