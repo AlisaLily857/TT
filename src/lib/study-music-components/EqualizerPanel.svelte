@@ -90,9 +90,10 @@
           {@const value = musicPlayer.eqGains[i] ?? 0}
           <div class="band">
             <span class="gain">{value > 0 ? "+" : ""}{value.toFixed(1)} dB</span>
+            <!-- svelte-ignore a11y_consider_explicit_label -->
             <input
               type="range"
-              orient="vertical"
+              {...{ orient: "vertical" } as any}
               min="-12"
               max="12"
               step="0.5"
