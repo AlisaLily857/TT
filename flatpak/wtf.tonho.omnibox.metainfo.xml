@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>wtf.tonho.tipics-tt</id>
-  <name>Omniget</name>
+  <id>wtf.tonho.omnibox</id>
+  <name>OmniBox</name>
   <summary>Download media from multiple platforms</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
@@ -10,7 +10,7 @@
   </developer>
   <description>
     <p>
-      Omniget is a desktop application to download videos, courses, and media
+      OmniBox is a desktop application to download videos, courses, and media
       from platforms like YouTube, Udemy, Hotmart, Telegram, Instagram, TikTok,
       Twitter, Reddit, Twitch, Pinterest, Bluesky, and Vimeo.
     </p>
@@ -23,17 +23,17 @@
       <li>Queue management with concurrent downloads</li>
     </ul>
   </description>
-  <url type="homepage">https://github.com/tonhowtf/tipics-tt</url>
-  <url type="bugtracker">https://github.com/tonhowtf/tipics-tt/issues</url>
-  <url type="vcs-browser">https://github.com/tonhowtf/tipics-tt</url>
-  <launchable type="desktop-id">wtf.tonho.tipics-tt.desktop</launchable>
+  <url type="homepage">https://github.com/tonhowtf/omnibox</url>
+  <url type="bugtracker">https://github.com/tonhowtf/omnibox/issues</url>
+  <url type="vcs-browser">https://github.com/tonhowtf/omnibox</url>
+  <launchable type="desktop-id">wtf.tonho.omnibox.desktop</launchable>
   <provides>
-    <binary>tipics-tt</binary>
+    <binary>omnibox</binary>
   </provides>
   <screenshots>
     <screenshot type="default">
       <caption>Main download interface</caption>
-      <image>https://raw.githubusercontent.com/tonhowtf/tipics-tt/main/flatpak/screenshots/main.png</image>
+      <image>https://raw.githubusercontent.com/tonhowtf/omnibox/main/flatpak/screenshots/main.png</image>
     </screenshot>
   </screenshots>
   <branding>

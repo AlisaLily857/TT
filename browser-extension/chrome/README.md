@@ -92,7 +92,7 @@ tests/
 ## Packaging
 
 ```bash
-node browser-extension/chrome/scripts/package.mjs --version 0.2.0 --output omniget-chrome-extension.zip
+node browser-extension/chrome/scripts/package.mjs --version 0.2.0 --output omnibox-chrome-extension.zip
 ```
 
 The packaging script strips the `key` field from `manifest.json` before creating the ZIP. Once the CWS assigns a store ID, add it to `CHROME_EXTENSION_IDS` in [`src-tauri/src/native_host.rs`](../../src-tauri/src/native_host.rs).

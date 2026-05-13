@@ -594,7 +594,7 @@
     if (track.artist) stateParts.push(track.artist);
     if (track.album) stateParts.push(track.album);
     const stateStr = stateParts.length > 0 ? stateParts.join(" · ") : "—";
-    const sourceTag = track.source === "spotify" ? "Spotify" : "omniget";
+    const sourceTag = track.source === "spotify" ? "Spotify" : "omnibox";
     void rpcSetSource({
       source: "music",
       details,

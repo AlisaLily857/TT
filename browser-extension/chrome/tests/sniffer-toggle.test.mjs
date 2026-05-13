@@ -51,7 +51,7 @@ test("enabling the sniffer requests wildcard permission and succeeds when grante
 
   assert.deepEqual(result, { ok: true });
   assert.equal(globalThis.chrome.__calls.request, 1);
-  assert.equal(globalThis.chrome.__backing.omniget_sniffer_enabled, true);
+  assert.equal(globalThis.chrome.__backing.omnibox_sniffer_enabled, true);
   assert.equal(mod.isSnifferEnabled(), true);
 });
 
@@ -63,7 +63,7 @@ test("enabling the sniffer fails closed and does not persist when permission is 
 
   assert.equal(result.ok, false);
   assert.equal(result.reason, "permission_denied");
-  assert.equal(globalThis.chrome.__backing.omniget_sniffer_enabled, false);
+  assert.equal(globalThis.chrome.__backing.omnibox_sniffer_enabled, false);
   assert.equal(mod.isSnifferEnabled(), false);
 });
 
@@ -75,7 +75,7 @@ test("disabling the sniffer never requests permission", async () => {
 
   assert.deepEqual(result, { ok: true });
   assert.equal(globalThis.chrome.__calls.request, 0);
-  assert.equal(globalThis.chrome.__backing.omniget_sniffer_enabled, false);
+  assert.equal(globalThis.chrome.__backing.omnibox_sniffer_enabled, false);
   assert.equal(mod.isSnifferEnabled(), false);
 });
 
@@ -107,7 +107,7 @@ test("loadSnifferState defaults to enabled when no prior setting", async () => {
 });
 
 test("loadSnifferState honours a previously-disabled flag", async () => {
-  globalThis.chrome = makeChromeStub({ storage: { omniget_sniffer_enabled: false } });
+  globalThis.chrome = makeChromeStub({ storage: { omnibox_sniffer_enabled: false } });
   const mod = await loadModuleFresh();
 
   const enabled = await mod.loadSnifferState();

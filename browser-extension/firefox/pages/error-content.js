@@ -1,22 +1,22 @@
 const ERROR_PAGE_MESSAGES = Object.freeze({
-  error_page_document_title: "TIPICS-tt Extension",
-  error_page_eyebrow: "TIPICS-tt Extension",
-  error_page_install_cta: "Install TIPICS-tt",
+  error_page_document_title: "OmniBox Extension",
+  error_page_eyebrow: "OmniBox Extension",
+  error_page_install_cta: "Install OmniBox",
   error_page_open_extensions: "Open Chrome Extensions",
-  error_host_missing_title: "Open TIPICS-tt once to finish Chrome setup",
-  error_host_missing_body: "Chrome could not find the TIPICS-tt bridge on this computer yet.",
+  error_host_missing_title: "Open OmniBox once to finish Chrome setup",
+  error_host_missing_body: "Chrome could not find the OmniBox bridge on this computer yet.",
   error_host_missing_detail:
-    "Install TIPICS-tt if needed, then launch the desktop app once and click the extension again.",
-  error_invalid_url_title: "This page URL cannot be sent to TIPICS-tt",
+    "Install OmniBox if needed, then launch the desktop app once and click the extension again.",
+  error_invalid_url_title: "This page URL cannot be sent to OmniBox",
   error_invalid_url_body:
-    "The current page is not a supported media page for the TIPICS-tt extension.",
+    "The current page is not a supported media page for the OmniBox extension.",
   error_invalid_url_detail:
     "Try again from a direct video, reel, post, playlist, or course page.",
-  error_launch_failed_title: "TIPICS-tt could not be launched from Chrome",
+  error_launch_failed_title: "OmniBox could not be launched from Chrome",
   error_launch_failed_body:
     "The extension talked to the native host, but the desktop app did not start correctly.",
   error_launch_failed_detail:
-    "Check that TIPICS-tt is installed and not blocked by your system, then try again.",
+    "Check that OmniBox is installed and not blocked by your system, then try again.",
 });
 
 const ERROR_CODES = Object.freeze({

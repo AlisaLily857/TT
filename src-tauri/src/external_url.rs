@@ -59,8 +59,8 @@ pub fn is_external_url(value: &str) -> bool {
 pub fn normalize_external_url(value: &str) -> Option<String> {
     let trimmed = value.trim();
     let rest = trimmed
-        .strip_prefix("omniget://")
-        .or_else(|| trimmed.strip_prefix("omniget:"))?;
+        .strip_prefix("omnibox://")
+        .or_else(|| trimmed.strip_prefix("omnibox:"))?;
     let rest = rest.trim_start_matches('/');
     if rest.is_empty() {
         return None;

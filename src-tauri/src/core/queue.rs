@@ -799,9 +799,9 @@ pub fn emit_queue_state_from_state(app: &tauri::AppHandle, state: Vec<QueueItemI
 
     if let Some(window) = app.get_webview_window("main") {
         let title = if total > 0 {
-            format!("({}) omniget", total)
+            format!("({}) omnibox", total)
         } else {
-            "omniget".into()
+            "omnibox".into()
         };
         let _ = window.set_title(&title);
     }

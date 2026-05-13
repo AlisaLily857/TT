@@ -6,8 +6,8 @@ fn check_portable_mode() {
             if dir.join("portable.txt").exists() || dir.join(".portable").exists() {
                 let data_dir = dir.join("data");
                 let _ = std::fs::create_dir_all(&data_dir);
-                std::env::set_var("TIPICS_TT_PORTABLE", "1");
-                std::env::set_var("TIPICS_TT_DATA_DIR", data_dir.to_string_lossy().to_string());
+                std::env::set_var("OMNIBOX_PORTABLE", "1");
+                std::env::set_var("OMNIBOX_DATA_DIR", data_dir.to_string_lossy().to_string());
             }
         }
     }

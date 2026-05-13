@@ -2,7 +2,7 @@
   import { open } from "@tauri-apps/plugin-shell";
   import { t } from "$lib/i18n";
 
-  const GITHUB_ISSUES_URL = "https://github.com/tonhowtf/omniget/issues";
+  const GITHUB_ISSUES_URL = "https://github.com/tonhowtf/omnibox/issues";
 
   async function openIssues() {
     await open(GITHUB_ISSUES_URL);

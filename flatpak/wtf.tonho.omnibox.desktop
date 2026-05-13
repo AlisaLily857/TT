@@ -1,11 +1,11 @@
 [Desktop Entry]
-Name=Omniget
+Name=OmniBox
 Comment=Download media from multiple platforms
 GenericName=Download Manager
-Exec=tipics-tt
-Icon=wtf.tonho.tipics-tt
+Exec=omnibox
+Icon=wtf.tonho.omnibox
 Terminal=false
 Type=Application
 Categories=Network;FileTransfer;Utility;
-Keywords=tipics-tt;download;downloader;video;media;udemy;hotmart;youtube;telegram;
-StartupWMClass=tipics-tt
+Keywords=omnibox;download;downloader;video;media;udemy;hotmart;youtube;telegram;
+StartupWMClass=omnibox

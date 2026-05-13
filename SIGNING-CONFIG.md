@@ -1,4 +1,4 @@
-# Code Signing Configuration for TIPICS-tt
+# Code Signing Configuration for OmniBox
 
 ## GitHub Secrets Setup
 
@@ -8,13 +8,13 @@ Add the following secrets to your GitHub repository (`Settings > Secrets and var
 | Secret Name | Value | Source |
 |-------------|-------|--------|
 | `WINDOWS_CERTIFICATE` | Base64 of `signing/windows.pfx` | `base64 -w 0 signing/windows.pfx` |
-| `WINDOWS_CERTIFICATE_PASSWORD` | `tipics-tt` | Generated |
+| `WINDOWS_CERTIFICATE_PASSWORD` | `omnibox` | Generated |
 
 ### macOS
 | Secret Name | Value | Source |
 |-------------|-------|--------|
 | `APPLE_CERTIFICATE` | Base64 of `signing/macos.p12` | `base64 -w 0 signing/macos.p12` |
-| `APPLE_CERTIFICATE_PASSWORD` | `tipics-tt` | Generated |
+| `APPLE_CERTIFICATE_PASSWORD` | `omnibox` | Generated |
 
 > Note: macOS code signing also requires an Apple Developer account for notarization. Self-signed certificates allow signing but users will see a security warning. For distribution, apply for an Apple Developer account (`$99/year`) and use `APPLE_ID`, `APPLE_PASSWORD`, and `APPLE_TEAM_ID` for notarization.
 
@@ -23,7 +23,7 @@ For Flatpak distribution with GPG signing:
 
 | Secret Name | Value | Source |
 |-------------|-------|--------|
-| `GPG_PRIVATE_KEY` | Base64 of `signing/tipics-tt.gpg.pub` (private) | `gpg --armor --export-secret-keys "TIPICS-tt Release" \| base64 -w 0` |
+| `GPG_PRIVATE_KEY` | Base64 of `signing/omnibox.gpg.pub` (private) | `gpg --armor --export-secret-keys "OmniBox Release" \| base64 -w 0` |
 | `GPG_PASSPHRASE` | *(no passphrase)* | Generated |
 
 ---
@@ -45,7 +45,7 @@ echo
 
 # GPG private key
 echo "GPG_PRIVATE_KEY:"
-gpg --armor --export-secret-keys "TIPICS-tt Release" | base64 -w 0
+gpg --armor --export-secret-keys "OmniBox Release" | base64 -w 0
 echo
 ```
 
@@ -59,4 +59,4 @@ echo
    - **macOS**: Apple Developer ID certificate + notarization
    - **Linux**: GPG signing (our self-signed GPG key is acceptable for community repos)
 3. **Certificate files** in `signing/` directory should NEVER be committed to git. They are in `.gitignore`.
-4. **Password**: All test certificates use password `tipics-tt`. Change this for production.
+4. **Password**: All test certificates use password `omnibox`. Change this for production.

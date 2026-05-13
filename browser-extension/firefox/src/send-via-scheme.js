@@ -1,6 +1,6 @@
-export const OMNIGET_SCHEME = "omniget://";
+export const OMNIBOX_SCHEME = "omnibox://";
 
-export function buildOmnigetSchemeUrl(url) {
+export function buildOmniboxSchemeUrl(url) {
   if (typeof url !== "string") {
     return null;
   }
@@ -8,21 +8,21 @@ export function buildOmnigetSchemeUrl(url) {
   if (!trimmed) {
     return null;
   }
-  if (trimmed.startsWith(OMNIGET_SCHEME)) {
+  if (trimmed.startsWith(OMNIBOX_SCHEME)) {
     return trimmed;
   }
   if (trimmed.startsWith("magnet:") || trimmed.startsWith("p2p:")) {
-    return `omniget:${trimmed}`;
+    return `omnibox:${trimmed}`;
   }
   const withoutProtocol = trimmed.replace(/^https?:\/\//i, "");
   if (!withoutProtocol) {
     return null;
   }
-  return `${OMNIGET_SCHEME}${withoutProtocol}`;
+  return `${OMNIBOX_SCHEME}${withoutProtocol}`;
 }
 
-export async function openOmnigetScheme(url, { tabs } = { tabs: chrome?.tabs }) {
-  const schemeUrl = buildOmnigetSchemeUrl(url);
+export async function openOmniboxScheme(url, { tabs } = { tabs: chrome?.tabs }) {
+  const schemeUrl = buildOmniboxSchemeUrl(url);
   if (!schemeUrl) {
     return { ok: false, reason: "invalid-url" };
   }

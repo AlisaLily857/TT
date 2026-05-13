@@ -22,16 +22,16 @@
 
   const PRESETS: Preset[] = [
     {
-      id: "omniget-default",
-      nameKey: "settings.typography.preset_omniget_default_name",
-      descKey: "settings.typography.preset_omniget_default_desc",
+      id: "omnibox-default",
+      nameKey: "settings.typography.preset_omnibox_default_name",
+      descKey: "settings.typography.preset_omnibox_default_desc",
       values: {
         font_display: "Bricolage Grotesque Variable",
         font_body: "Inter",
         font_mono: "IBM Plex Mono",
         line_height_base: 1.55,
         spacing_scale: 1.0,
-        preset_name: "omniget-default",
+        preset_name: "omnibox-default",
       },
     },
     {
@@ -102,7 +102,7 @@
     font_mono: "IBM Plex Mono",
     line_height_base: 1.55,
     spacing_scale: 1.0,
-    preset_name: "omniget-default",
+    preset_name: "omnibox-default",
   };
 
   let settings = $derived(getSettings());

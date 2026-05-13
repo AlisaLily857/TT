@@ -1,4 +1,4 @@
-name: 'Build TIPICS-tt'
+name: 'Build OmniBox'
 
 on:
   push:
@@ -59,32 +59,32 @@ jobs:
         if: matrix.platform == 'macos-latest'
         run: |
           echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 -d > /tmp/macos.p12
-          security create-keychain -p "tipics-tt" /tmp/tipics-tt.keychain
-          security unlock-keychain -p "tipics-tt" /tmp/tipics-tt.keychain
-          security import /tmp/macos.p12 -k /tmp/tipics-tt.keychain -P "tipics-tt" -T /usr/bin/codesign
-          security set-keychain-settings -t 3600 -u /tmp/tipics-tt.keychain
-          security list-keychains -s /tmp/tipics-tt.keychain
-          security default-keychain -s /tmp/tipics-tt.keychain
+          security create-keychain -p "omnibox" /tmp/omnibox.keychain
+          security unlock-keychain -p "omnibox" /tmp/omnibox.keychain
+          security import /tmp/macos.p12 -k /tmp/omnibox.keychain -P "omnibox" -T /usr/bin/codesign
+          security set-keychain-settings -t 3600 -u /tmp/omnibox.keychain
+          security list-keychains -s /tmp/omnibox.keychain
+          security default-keychain -s /tmp/omnibox.keychain
 
       # --- Windows Signing (self-signed for testing) ---
       - name: Setup Windows certificate
         if: matrix.platform == 'windows-latest'
         run: |
           $certBytes = [Convert]::FromBase64String("${{ secrets.WINDOWS_CERTIFICATE }}")
-          [IO.File]::WriteAllBytes("D:\\tipics-tt.pfx", $certBytes)
+          [IO.File]::WriteAllBytes("D:\\omnibox.pfx", $certBytes)
 
       - name: Build Tauri
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           APPLE_CERTIFICATE: /tmp/macos.p12
-          APPLE_CERTIFICATE_PASSWORD: tipics-tt
-          APPLE_SIGNING_IDENTITY: 'TIPICS-tt'
+          APPLE_CERTIFICATE_PASSWORD: omnibox
+          APPLE_SIGNING_IDENTITY: 'OmniBox'
           WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
-          WINDOWS_CERTIFICATE_PASSWORD: tipics-tt
+          WINDOWS_CERTIFICATE_PASSWORD: omnibox
         with:
           tagName: v__VERSION__
-          releaseName: 'TIPICS-tt v__VERSION__'
+          releaseName: 'OmniBox v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false

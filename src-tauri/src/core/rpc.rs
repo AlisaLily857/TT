@@ -9,8 +9,8 @@ use serde_json::{json, Value};
 pub use omniget_core::models::settings::RpcSettings;
 
 const GITHUB_BUTTON_LABEL: &str = "View on GitHub";
-const GITHUB_BUTTON_URL: &str = "https://github.com/tonhowtf/omniget";
-const APP_LARGE_TEXT: &str = "omniget";
+const GITHUB_BUTTON_URL: &str = "https://github.com/tonhowtf/omnibox";
+const APP_LARGE_TEXT: &str = "omnibox";
 
 const SOURCE_PRIORITIES: &[&str] = &["focus", "music", "video", "course", "reading"];
 
@@ -246,7 +246,7 @@ fn apply_top_activity(default_image: &str) -> bool {
             (details, state_text, a.source.clone(), img)
         }
         None => {
-            let details = "omniget".to_string();
+            let details = "omnibox".to_string();
             let state_text = idle_state_text(idle_stats);
             (details, state_text, "idle".to_string(), default_image.to_string())
         }
@@ -305,7 +305,7 @@ pub async fn test_connection(settings: RpcSettings) -> Result<Value, String> {
         let assets = Assets::new().large_image(&img).large_text(APP_LARGE_TEXT);
         let buttons = vec![Button::new(GITHUB_BUTTON_LABEL, GITHUB_BUTTON_URL)];
         let activity = Activity::new()
-            .details("omniget")
+            .details("omnibox")
             .state("Testing connection")
             .assets(assets)
             .buttons(buttons)

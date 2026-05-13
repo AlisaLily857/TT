@@ -1,9 +1,9 @@
 [weblate]
 url = https://hosted.weblate.org/api/
-translation = omniget/frontend-json
+translation = omnibox/frontend-json
 
-[component "omniget/frontend-json"]
-slug = omniget/frontend-json
+[component "omnibox/frontend-json"]
+slug = omnibox/frontend-json
 file_format = json-nested
 filemask = src/lib/i18n/*.json
 template = src/lib/i18n/en.json

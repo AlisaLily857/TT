@@ -16,7 +16,7 @@ Then:
 
 ```bash
 git clone https://github.com/tonhowtf/omniget.git
-cd omniget
+cd omnibox
 pnpm install
 pnpm tauri dev
 ```

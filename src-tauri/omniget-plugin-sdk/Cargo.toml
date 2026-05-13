@@ -1,8 +1,11 @@
 [package]
-name = "tipics-tt-plugin-sdk"
+name = "omnibox-plugin-sdk"
 version = "0.2.0"
 edition = "2021"
-description = "SDK for building OmniGet plugins"
+description = "SDK for building OmniBox plugins"
+
+[lib]
+name = "omniget_plugin_sdk"
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }

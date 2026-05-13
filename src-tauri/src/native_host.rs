@@ -6,20 +6,20 @@ use std::path::{Path, PathBuf};
 use anyhow::Context;
 use serde::{Deserialize, Serialize};
 
-pub const CHROME_HOST_NAME: &str = "wtf.tonho.omniget";
+pub const CHROME_HOST_NAME: &str = "wtf.tonho.omnibox";
 pub const CHROME_EXTENSION_IDS: &[&str] = &["dkjelkhaaakffpghdfalobccaaipajip"];
-const FIREFOX_EXTENSION_ID: &str = "omniget@tonho.wtf";
+const FIREFOX_EXTENSION_ID: &str = "omnibox@tonho.wtf";
 const HOST_MAX_PROTOCOL_VERSION: u32 = 1;
 const MAX_MESSAGE_LENGTH: usize = 1_048_576;
 const MAX_COOKIES_PER_REQUEST: usize = 500;
 
 #[cfg(target_os = "windows")]
-const HOST_COPY_NAME: &str = "tipics-tt-native-host.exe";
+const HOST_COPY_NAME: &str = "omnibox-native-host.exe";
 #[cfg(not(target_os = "windows"))]
-const HOST_COPY_NAME: &str = "tipics-tt-native-host";
-const HOST_BINARY_STEM: &str = "tipics-tt-native-host";
+const HOST_COPY_NAME: &str = "omnibox-native-host";
+const HOST_BINARY_STEM: &str = "omnibox-native-host";
 const HOST_CONFIG_NAME: &str = "native-host-config.json";
-const HOST_MANIFEST_NAME: &str = "wtf.tonho.tipics-tt.json";
+const HOST_MANIFEST_NAME: &str = "wtf.tonho.omnibox.json";
 
 #[derive(Debug, Deserialize)]
 struct NativeHostRequest {
@@ -220,8 +220,8 @@ fn detect_portable_mode() {
     if app_dir.join("portable.txt").exists() || app_dir.join(".portable").exists() {
         let data_dir = app_dir.join("data");
         let _ = fs::create_dir_all(&data_dir);
-        std::env::set_var("OMNIGET_PORTABLE", "1");
-        std::env::set_var("OMNIGET_DATA_DIR", data_dir.to_string_lossy().to_string());
+        std::env::set_var("OMNIBOX_PORTABLE", "1");
+        std::env::set_var("OMNIBOX_DATA_DIR", data_dir.to_string_lossy().to_string());
     }
 }
 
@@ -288,7 +288,7 @@ fn write_host_manifest(manifest_path: &Path, host_exe: &Path) -> anyhow::Result<
 fn build_host_manifest(host_exe: &Path) -> serde_json::Value {
     serde_json::json!({
         "name": CHROME_HOST_NAME,
-        "description": "TIPICS-tt native host for Chrome",
+        "description": "OmniBox native host for Chrome",
         "path": host_exe.to_string_lossy().to_string(),
         "type": "stdio",
         "allowed_origins": chrome_allowed_origins()
@@ -388,7 +388,7 @@ fn register_host_manifest(_manifest_path: &Path) -> anyhow::Result<()> {
 fn build_firefox_manifest(host_exe: &Path) -> serde_json::Value {
     serde_json::json!({
         "name": CHROME_HOST_NAME,
-        "description": "TIPICS-tt native host for Firefox",
+        "description": "OmniBox native host for Firefox",
         "path": host_exe.to_string_lossy().to_string(),
         "type": "stdio",
         "allowed_extensions": [FIREFOX_EXTENSION_ID]
@@ -792,7 +792,7 @@ fn handle_request(request: NativeHostRequest) -> NativeHostResponse {
                 ok: false,
                 code: Some("UNSUPPORTED_PROTOCOL"),
                 message: Some(format!(
-                    "Extension protocol v{} is newer than host v{}. Please update TIPICS-tt.",
+                    "Extension protocol v{} is newer than host v{}. Please update OmniBox.",
                     client_version, HOST_MAX_PROTOCOL_VERSION
                 )),
             };
@@ -857,7 +857,7 @@ fn handle_request(request: NativeHostRequest) -> NativeHostResponse {
         }
         if !cookies.is_empty() {
             if let Err(e) = write_extension_cookies(cookies) {
-                eprintln!("[TIPICS-tt] Warning: failed to write extension cookies: {e}");
+                eprintln!("[OmniBox] Warning: failed to write extension cookies: {e}");
             }
         }
     }
@@ -872,11 +872,11 @@ fn handle_request(request: NativeHostRequest) -> NativeHostResponse {
         || request.user_agent.is_some()
     {
         if let Err(e) = write_extension_metadata(&request) {
-            eprintln!("[TIPICS-tt] Warning: failed to write extension metadata: {e}");
+            eprintln!("[OmniBox] Warning: failed to write extension metadata: {e}");
         }
     }
 
-    match launch_omniget(&request.url) {
+    match launch_omnibox(&request.url) {
         Ok(()) => NativeHostResponse {
             ok: true,
             code: None,
@@ -890,7 +890,7 @@ fn handle_request(request: NativeHostRequest) -> NativeHostResponse {
     }
 }
 
-fn launch_omniget(url: &str) -> anyhow::Result<()> {
+fn launch_omnibox(url: &str) -> anyhow::Result<()> {
     let current_exe = std::env::current_exe()?;
     let config_path = current_exe
         .parent()
@@ -950,16 +950,16 @@ mod tests {
     #[test]
     fn host_copy_name_matches_platform() {
         #[cfg(target_os = "windows")]
-        assert_eq!(HOST_COPY_NAME, "tipics-tt-native-host.exe");
+        assert_eq!(HOST_COPY_NAME, "omnibox-native-host.exe");
 
         #[cfg(not(target_os = "windows"))]
-        assert_eq!(HOST_COPY_NAME, "tipics-tt-native-host");
+        assert_eq!(HOST_COPY_NAME, "omnibox-native-host");
     }
 
     #[test]
     fn manifest_path_from_base_matches_platform_location() {
         #[cfg(target_os = "windows")]
-        let base = Path::new(r"C:\Users\test\AppData\Roaming\omniget\chrome-native-host");
+        let base = Path::new(r"C:\Users\test\AppData\Roaming\omnibox\chrome-native-host");
 
         #[cfg(not(target_os = "windows"))]
         let base = Path::new("/tmp/chrome-base");
@@ -1024,17 +1024,17 @@ mod tests {
     #[test]
     fn build_host_manifest_contains_expected_fields() {
         #[cfg(target_os = "windows")]
-        let host_exe = Path::new(r"C:\tmp\tipics-tt-native-host.exe");
+        let host_exe = Path::new(r"C:\tmp\omnibox-native-host.exe");
 
         #[cfg(not(target_os = "windows"))]
-        let host_exe = Path::new("/tmp/tipics-tt-native-host");
+        let host_exe = Path::new("/tmp/omnibox-native-host");
 
         let manifest = build_host_manifest(host_exe);
 
         assert_eq!(manifest["name"].as_str(), Some(CHROME_HOST_NAME));
         assert_eq!(
             manifest["description"].as_str(),
-            Some("TIPICS-tt native host for Chrome")
+            Some("OmniBox native host for Chrome")
         );
         assert_eq!(
             manifest["path"].as_str(),

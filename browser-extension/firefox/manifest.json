@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "TIPICS-tt",
-  "description": "Detect supported media pages and send them to TIPICS-tt with one click.",
+  "name": "OmniBox",
+  "description": "Detect supported media pages and send them to OmniBox with one click.",
   "version": "0.4.0",
   "default_locale": "en",
   "browser_specific_settings": {
     "gecko": {
-      "id": "tipics-tt@tonho.wtf",
+      "id": "omnibox@tonho.wtf",
       "strict_min_version": "109.0"
     }
   },
@@ -85,7 +85,7 @@
   },
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "TIPICS-tt",
+    "default_title": "OmniBox",
     "default_icon": {
       "16": "icons/inactive-16.png",
       "24": "icons/inactive-24.png",
@@ -101,11 +101,11 @@
     "128": "icons/active-128.png"
   },
   "commands": {
-    "send-to-tipics-tt": {
+    "send-to-omnibox": {
       "suggested_key": {
         "default": "Alt+O"
       },
-      "description": "Send current page to TIPICS-tt"
+      "description": "Send current page to OmniBox"
     }
   }
 }

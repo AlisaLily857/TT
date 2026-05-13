@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="static/loop.png" alt="Loop, the TIPICS-tt mascot" width="120" />
+  <img src="static/loop.png" alt="Loop, the OmniBox mascot" width="120" />
 </p>
 
-<h1 align="center">TIPICS-tt</h1>
+<h1 align="center">OmniBox</h1>
 
 <h3 align="center">Download once. Study, watch and listen inside the app.</h3>
 
@@ -12,24 +12,24 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tonhowtf/tipics-tt/releases/latest"><img src="https://img.shields.io/github/v/release/tonhowtf/tipics-tt?style=for-the-badge&label=release" alt="Latest Release" /></a>
+  <a href="https://github.com/tonhowtf/omnibox/releases/latest"><img src="https://img.shields.io/github/v/release/tonhowtf/omnibox?style=for-the-badge&label=release" alt="Latest Release" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge" alt="License GPL-3.0" /></a>
-  <a href="https://github.com/tonhowtf/tipics-tt/stargazers"><img src="https://img.shields.io/github/stars/tonhowtf/tipics-tt?style=for-the-badge" alt="Stars" /></a>
-  <a href="https://github.com/tonhowtf/tipics-tt/releases"><img src="https://img.shields.io/github/downloads/tonhowtf/tipics-tt/total?style=for-the-badge&label=downloads" alt="Downloads" /></a>
-  <a href="https://hosted.weblate.org/engage/tipics-tt/"><img src="https://hosted.weblate.org/widget/tipics-tt/frontend-json/svg-badge.svg" alt="Translation status" /></a>
+  <a href="https://github.com/tonhowtf/omnibox/stargazers"><img src="https://img.shields.io/github/stars/tonhowtf/omnibox?style=for-the-badge" alt="Stars" /></a>
+  <a href="https://github.com/tonhowtf/omnibox/releases"><img src="https://img.shields.io/github/downloads/tonhowtf/omnibox/total?style=for-the-badge&label=downloads" alt="Downloads" /></a>
+  <a href="https://hosted.weblate.org/engage/omnibox/"><img src="https://hosted.weblate.org/widget/omnibox/frontend-json/svg-badge.svg" alt="Translation status" /></a>
 </p>
 
 <p align="center">
-  <strong>TIPICS-tt</strong> is a free desktop app that downloads videos, courses, books and music from the internet — then plays them inside. One window, no setup, your files stay on your computer.
+  <strong>OmniBox</strong> is a free desktop app that downloads videos, courses, books and music from the internet — then plays them inside. One window, no setup, your files stay on your computer.
 </p>
 
 <p align="center">
-  <img src="assets/screenshot.png" alt="TIPICS-tt home screen" width="820" />
+  <img src="assets/screenshot.png" alt="OmniBox home screen" width="820" />
 </p>
 
 ---
 
-## Get TIPICS-tt
+## Get OmniBox
 
 <table>
   <tr>
@@ -39,7 +39,7 @@
   <tr>
     <td><strong>Windows</strong></td>
     <td>
-      <a href="https://github.com/tonhowtf/tipics-tt/releases/latest"><img alt="Download for Windows" src="https://img.shields.io/badge/Windows-Portable_EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white" height="40"></a>
+      <a href="https://github.com/tonhowtf/omnibox/releases/latest"><img alt="Download for Windows" src="https://img.shields.io/badge/Windows-Portable_EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white" height="40"></a>
       <br/>
       <sub>Download the <code>.exe</code> and double-click. No installer, no admin needed.</sub>
     </td>
@@ -47,17 +47,17 @@
   <tr>
     <td><strong>macOS</strong></td>
     <td>
-      <a href="https://github.com/tonhowtf/tipics-tt/releases/latest"><img alt="Download for macOS" src="https://img.shields.io/badge/macOS-DMG-000000?style=for-the-badge&logo=apple&logoColor=white" height="40"></a>
+      <a href="https://github.com/tonhowtf/omnibox/releases/latest"><img alt="Download for macOS" src="https://img.shields.io/badge/macOS-DMG-000000?style=for-the-badge&logo=apple&logoColor=white" height="40"></a>
       <br/>
-      <sub>Open the <code>.dmg</code> and drag TIPICS-tt to Applications.</sub>
+      <sub>Open the <code>.dmg</code> and drag OmniBox to Applications.</sub>
     </td>
   </tr>
   <tr>
     <td><strong>Linux</strong></td>
     <td>
-      <a href="https://github.com/tonhowtf/tipics-tt/releases/latest"><img alt="Download Flatpak" src="https://img.shields.io/badge/Linux-Flatpak-FFAA33?style=for-the-badge&logo=linux&logoColor=white" height="40"></a>
+      <a href="https://github.com/tonhowtf/omnibox/releases/latest"><img alt="Download Flatpak" src="https://img.shields.io/badge/Linux-Flatpak-FFAA33?style=for-the-badge&logo=linux&logoColor=white" height="40"></a>
       <br/>
-      <sub><code>flatpak install wtf.tonho.tipics-tt</code> — or grab the bundle from Releases.</sub>
+      <sub><code>flatpak install wtf.tonho.omnibox</code> — or grab the bundle from Releases.</sub>
     </td>
   </tr>
 </table>
@@ -92,7 +92,7 @@ Download the whole course (Hotmart, Udemy, Kiwify, Skool, Teachable, Kajabi, Won
 
 ### 3. Read books, real ones
 
-Drop a folder of PDFs and EPUBs. TIPICS-tt pulls covers from them, fetches titles and authors, and opens each one in a built-in reader with highlights, bookmarks, a focus mode and a paper-feel theme for the eyes. CBZ comics and TXT/HTML too.
+Drop a folder of PDFs and EPUBs. OmniBox pulls covers from them, fetches titles and authors, and opens each one in a built-in reader with highlights, bookmarks, a focus mode and a paper-feel theme for the eyes. CBZ comics and TXT/HTML too.
 
 <p align="center">
   <img src="assets/screenshot-reader.png" alt="Built-in book reader" width="720" />
@@ -104,7 +104,7 @@ Drop a folder of PDFs and EPUBs. TIPICS-tt pulls covers from them, fetches title
 
 ## Music, the way you remember it
 
-Point TIPICS-tt to your music folder and it shows your tracks the way iTunes used to: albums with covers, artists with discographies, a queue that doesn't argue with you.
+Point OmniBox to your music folder and it shows your tracks the way iTunes used to: albums with covers, artists with discographies, a queue that doesn't argue with you.
 
 - Plays MP3, FLAC, M4A, OGG, Opus — anything you already have.
 - Pulls **synced lyrics** so they scroll along with the song.
@@ -121,7 +121,7 @@ Point TIPICS-tt to your music folder and it shows your tracks the way iTunes use
 
 ## Where the downloads come from
 
-You paste a link. TIPICS-tt figures out the site, shows a preview with quality options, and downloads.
+You paste a link. OmniBox figures out the site, shows a preview with quality options, and downloads.
 
 | What | Examples |
 |------|----------|
@@ -130,7 +130,7 @@ You paste a link. TIPICS-tt figures out the site, shows a preview with quality o
 | Asian platforms | Douyin (抖音), Xiaohongshu (小红书), Kuaishou (快手), Youku (优酷), iQiyi (爱奇艺), Tencent Video, Mango TV |
 | Files | `.torrent` and magnet links, P2P direct transfer between two computers with a 4-word code |
 
-If yt-dlp supports a site, TIPICS-tt downloads from it — roughly a thousand more.
+If yt-dlp supports a site, OmniBox downloads from it — roughly a thousand more.
 
 ---
 
@@ -143,7 +143,7 @@ Quietly there when you need them.
 - **Progress dashboard** with a streak counter, daily goals and a year-style heatmap.
 - **FFmpeg converter** for local files. No internet required.
 - **Telegram chat browser** that lets you save photos, videos and files from any chat.
-- **Browser extension** (Chrome and Firefox) that hands the current page to TIPICS-tt with one click.
+- **Browser extension** (Chrome and Firefox) that hands the current page to OmniBox with one click.
 - **Global hotkey** (`Ctrl+Shift+D`) that downloads whatever URL is in your clipboard.
 - **9 languages**, **14 themes** including Catppuccin, Dracula, One Dark Pro and three e-ink variants.
 
@@ -152,10 +152,10 @@ Quietly there when you need them.
 ## How it feels day-to-day
 
 <p align="center">
-  <img src="assets/screenshot-flow.png" alt="TIPICS-tt typical flow" width="720" />
+  <img src="assets/screenshot-flow.png" alt="OmniBox typical flow" width="720" />
 </p>
 
-Copy a link anywhere — a tweet, a Discord message, an open tab. Press `Ctrl+Shift+D`. TIPICS-tt downloads in the background. You don't even open the window.
+Copy a link anywhere — a tweet, a Discord message, an open tab. Press `Ctrl+Shift+D`. OmniBox downloads in the background. You don't even open the window.
 
 Or paste in the omnibox, glance at the preview, click download.
 
@@ -169,11 +169,11 @@ For music: point at a folder, and the library is yours.
 
 ## Build from source
 
-For developers. If you just want to use TIPICS-tt, [grab a release](#get-tipics-tt).
+For developers. If you just want to use OmniBox, [grab a release](#get-omnibox).
 
 ```bash
-git clone https://github.com/tonhowtf/tipics-tt.git
-cd tipics-tt
+git clone https://github.com/tonhowtf/omnibox.git
+cd omnibox
 pnpm install
 pnpm tauri dev
 ```
@@ -197,8 +197,8 @@ sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file lib
 **macOS:** If Gatekeeper blocks the app, run in Terminal:
 
 ```bash
-xattr -cr /Applications/tipics-tt.app
-codesign --force --deep --sign - /Applications/tipics-tt.app
+xattr -cr /Applications/omnibox.app
+codesign --force --deep --sign - /Applications/omnibox.app
 ```
 
 </details>
@@ -209,9 +209,9 @@ Production build: `pnpm tauri build`.
 
 ## Contribute
 
-Bug or feature idea? [Open an issue](https://github.com/tonhowtf/tipics-tt/issues). Pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
+Bug or feature idea? [Open an issue](https://github.com/tonhowtf/omnibox/issues). Pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-TIPICS-tt is translated on [Weblate](https://hosted.weblate.org/engage/tipics-tt/). Pick a language, translate in your browser, Weblate opens a pull request automatically.
+OmniBox is translated on [Weblate](https://hosted.weblate.org/engage/omnibox/). Pick a language, translate in your browser, Weblate opens a pull request automatically.
 
 ## Notice to platform owners
 
@@ -219,8 +219,8 @@ If you represent a listed platform and have concerns, email **tonhowtf@gmail.com
 
 ## Legal
 
-TIPICS-tt is meant for personal use. Respect copyright and each platform's terms of service. You are responsible for what you download.
+OmniBox is meant for personal use. Respect copyright and each platform's terms of service. You are responsible for what you download.
 
 ## License
 
-[GPL-3.0](LICENSE). The TIPICS-tt name, logo and Loop mascot are project trademarks not covered by the code license.
+[GPL-3.0](LICENSE). The OmniBox name, logo and Loop mascot are project trademarks not covered by the code license.

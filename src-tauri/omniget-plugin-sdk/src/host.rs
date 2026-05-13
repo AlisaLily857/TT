@@ -42,9 +42,9 @@ pub trait PluginHost: Send + Sync {
     ///
     /// # Platform layout
     ///
-    /// - Windows: `%LOCALAPPDATA%\wtf.tonho.tipics-tt\external-cache\{plugin_id}\{namespace}\`
-    /// - Linux: `$XDG_CACHE_HOME/wtf.tonho.tipics-tt/external-cache/{plugin_id}/{namespace}/` (falls back to `~/.cache/...`)
-    /// - macOS: `~/Library/Caches/wtf.tonho.tipics-tt/external-cache/{plugin_id}/{namespace}/`
+    /// - Windows: `%LOCALAPPDATA%\wtf.tonho.omnibox\external-cache\{plugin_id}\{namespace}\`
+    /// - Linux: `$XDG_CACHE_HOME/wtf.tonho.omnibox/external-cache/{plugin_id}/{namespace}/` (falls back to `~/.cache/...`)
+    /// - macOS: `~/Library/Caches/wtf.tonho.omnibox/external-cache/{plugin_id}/{namespace}/`
     ///
     /// These are the OS-canonical cache locations (non-roaming on Windows,
     /// `$XDG_CACHE_HOME` on Linux, `Caches/` on macOS). They are deliberately

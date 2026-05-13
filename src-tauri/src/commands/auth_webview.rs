@@ -281,9 +281,9 @@ async fn extract_cookies_js(
                 }
             }
         } catch(e) {}
-        document.title = '__OMNIGET_COOKIES__' + JSON.stringify(result);
+        document.title = '__OMNIBOX_COOKIES__' + JSON.stringify(result);
     } catch(err) {
-        document.title = '__OMNIGET_COOKIES__{"cookies":"","storage":{}}';
+        document.title = '__OMNIBOX_COOKIES__{"cookies":"","storage":{}}';
     }
 })()
 "#;
@@ -307,7 +307,7 @@ async fn extract_cookies_js(
         tokio::time::sleep(std::time::Duration::from_millis(delay_ms)).await;
 
         if let Ok(title) = window.title() {
-            if let Some(data_str) = title.strip_prefix("__OMNIGET_COOKIES__") {
+            if let Some(data_str) = title.strip_prefix("__OMNIBOX_COOKIES__") {
                 return parse_cookie_data(data_str, default_domain);
             }
         }

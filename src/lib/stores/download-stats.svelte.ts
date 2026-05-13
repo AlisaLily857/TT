@@ -1,6 +1,6 @@
 import { formatBytes } from "./download-store.svelte";
 
-const STORAGE_KEY = "omniget_download_stats";
+const STORAGE_KEY = "omnibox_download_stats";
 
 type Stats = {
   totalDownloads: number;

@@ -36,12 +36,12 @@ fn register_one(app: &tauri::AppHandle, binding: &str, label: &str) {
                         "[hotkey] macOS: Global shortcut registration failed. \
                         The app may need Accessibility permission. \
                         Go to System Settings > Privacy & Security > Accessibility \
-                        and enable TIPICS-tt."
+                        and enable OmniBox."
                     );
                     let _ = app.emit(
                         "hotkey-permission-error",
                         serde_json::json!({
-                            "message": "Global hotkey requires Accessibility permission. Open System Settings > Privacy & Security > Accessibility and enable TIPICS-tt.",
+                            "message": "Global hotkey requires Accessibility permission. Open System Settings > Privacy & Security > Accessibility and enable OmniBox.",
                             "platform": "macos"
                         }),
                     );

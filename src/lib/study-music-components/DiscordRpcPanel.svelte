@@ -171,7 +171,7 @@
                 <input
                   type="text"
                   bind:value={imageKeyInput}
-                  placeholder="omniget_music"
+                  placeholder="omnibox_music"
                   autocomplete="off"
                 />
                 <small>{$t("study.music.rpc_image_hint")}</small>

@@ -75,7 +75,7 @@ pub async fn browser_extension_status(
             supported: false,
             bundled_version: None,
             installable: false,
-            install_hint: "Safari só aceita extensões via Mac App Store desde Safari 14. Versão Safari da TIPICS-tt ainda não publicada.".into(),
+            install_hint: "Safari só aceita extensões via Mac App Store desde Safari 14. Versão Safari da OmniBox ainda não publicada.".into(),
             store_url: None,
         },
     ])

@@ -124,7 +124,7 @@ impl<R: Runtime + 'static> PluginHost for PluginHostImpl<R> {
             anyhow::anyhow!("external_data_cache: OS cache dir unavailable on this platform")
         })?;
         let dir = base
-            .join("wtf.tonho.omniget")
+            .join("wtf.tonho.omnibox")
             .join("external-cache")
             .join(plugin_id)
             .join(namespace);

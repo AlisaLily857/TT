@@ -1,7 +1,7 @@
 {
-  "name": "tipics-tt",
+  "name": "omnibox",
   "version": "0.6.0",
-  "description": "TIPICS-tt - Download and consume content",
+  "description": "OmniBox - Download and consume content",
   "type": "module",
   "packageManager": "pnpm@10.29.3",
   "scripts": {

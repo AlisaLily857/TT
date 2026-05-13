@@ -1,10 +1,10 @@
-// Reading-time theme override for the omniget app theme.
+// Reading-time theme override for the omnibox app theme.
 // Instead of an isolated `data-read-theme` system, we swap the actual app theme
 // while the reader is open, then restore the user's preference on exit.
 //
 // Preference key: `study.read.reading_theme`
 //   - "app" (default): keep current app theme, no swap
-//   - "eink-day" / "eink-sepia" / "eink-night" / any omniget theme id: swap to it on open
+//   - "eink-day" / "eink-sepia" / "eink-night" / any omnibox theme id: swap to it on open
 
 const READING_THEME_KEY = "study.read.reading_theme";
 const PAPER_KEY = "study.read.paper";

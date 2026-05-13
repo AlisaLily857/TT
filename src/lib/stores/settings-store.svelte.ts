@@ -88,7 +88,7 @@ const TYPOGRAPHY_DEFAULTS: TypographySettings = {
   font_mono: "IBM Plex Mono",
   line_height_base: 1.55,
   spacing_scale: 1.0,
-  preset_name: "omniget-default",
+  preset_name: "omnibox-default",
 };
 
 const SPACING_BASE_PX: Record<string, number> = {

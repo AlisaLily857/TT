@@ -1,7 +1,7 @@
 import { getVersion } from "@tauri-apps/api/app";
 
-const STORAGE_KEY = "omniget_last_seen_version";
-const CHANGELOG_BODY_KEY = "omniget_pending_changelog";
+const STORAGE_KEY = "omnibox_last_seen_version";
+const CHANGELOG_BODY_KEY = "omnibox_pending_changelog";
 
 let showDialog = $state(false);
 let changelogBody = $state("");
@@ -71,7 +71,7 @@ export async function fetchChangelog(): Promise<string> {
 
   try {
     const res = await fetch(
-      `https://api.github.com/repos/tonhowtf/omniget/releases/tags/v${currentVersion}`,
+      `https://api.github.com/repos/tonhowtf/omnibox/releases/tags/v${currentVersion}`,
       { headers: { Accept: "application/vnd.github.v3+json" } }
     );
     if (res.ok) {
@@ -85,7 +85,7 @@ export async function fetchChangelog(): Promise<string> {
 
   try {
     const res = await fetch(
-      "https://api.github.com/repos/tonhowtf/omniget/releases/latest",
+      "https://api.github.com/repos/tonhowtf/omnibox/releases/latest",
       { headers: { Accept: "application/vnd.github.v3+json" } }
     );
     if (res.ok) {

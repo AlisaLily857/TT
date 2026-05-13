@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 const MANIFEST_URL: &str = "https://petdex.crafter.run/api/manifest";
 const FALLBACK_BUNDLE_URL: &str =
     "https://pub-94495283df974cfea5e98d6a9e3fa462.r2.dev/packs/petdex-approved.zip";
-const USER_AGENT: &str = "omniget-pets/1.0";
+const USER_AGENT: &str = "omnibox-pets/1.0";
 
 const MIN_SPRITE_BYTES: usize = 10 * 1024;
 const MAX_SPRITE_BYTES: usize = 5 * 1024 * 1024;

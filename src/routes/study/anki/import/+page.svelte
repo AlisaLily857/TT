@@ -193,7 +193,7 @@
         : kind === "colpkg" ? "colpkg"
         : kind === "json" ? "json"
         : "csv";
-      const defaultName = `omniget-${kind}-${new Date().toISOString().slice(0, 10)}.${ext}`;
+      const defaultName = `omnibox-${kind}-${new Date().toISOString().slice(0, 10)}.${ext}`;
       const target = await dialog.save({
         defaultPath: defaultName,
         filters: [{ name: ext.toUpperCase(), extensions: [ext] }],
@@ -259,7 +259,7 @@
 </script>
 
 <section class="study-page">
-  <PageHero title="Importar / Exportar" subtitle="Mover dados entre o omniget e outros clientes Anki" />
+  <PageHero title="Importar / Exportar" subtitle="Mover dados entre o omnibox e outros clientes Anki" />
 
   <div class="format-grid">
     <article class="format-card">
@@ -363,7 +363,7 @@
 
       <article class="export-card">
         <h3>.json</h3>
-        <p>Snapshot interno. Importável de volta no omniget com round-trip completo.</p>
+        <p>Snapshot interno. Importável de volta no omnibox com round-trip completo.</p>
         <button
           type="button"
           class="btn-secondary"

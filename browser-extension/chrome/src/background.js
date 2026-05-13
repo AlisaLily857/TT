@@ -5,10 +5,10 @@ import { registerSnifferListeners, getMediaCount, getMediaCountForPage, getDetec
 import { summarizeCookies } from "./cookie-summary.js";
 import { loadSnifferState, isSnifferEnabled, setSnifferEnabled } from "./sniffer-toggle.js";
 import { registerContextMenu, getContextMenuId } from "./context-menu.js";
-import { openOmnigetScheme } from "./send-via-scheme.js";
+import { openOmniboxScheme } from "./send-via-scheme.js";
 
-const HOST_NAME = "wtf.tonho.omniget";
-const INSTALL_URL = "https://github.com/tonhowtf/omniget/releases/latest";
+const HOST_NAME = "wtf.tonho.omnibox";
+const INSTALL_URL = "https://github.com/tonhowtf/omnibox/releases/latest";
 const PROTOCOL_VERSION = 1;
 
 function getIconPath(iconSet) {
@@ -78,7 +78,7 @@ chrome.runtime.onStartup.addListener(() => {
 
 if (chrome.commands && chrome.commands.onCommand) {
   chrome.commands.onCommand.addListener(async (command) => {
-    if (command !== "send-to-omniget") return;
+    if (command !== "send-to-omnibox") return;
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab?.url) return;
@@ -99,7 +99,7 @@ if (chrome.commands && chrome.commands.onCommand) {
         try { await chrome.action.openPopup(); } catch {}
       }
     } catch (error) {
-      console.error("[TIPICS-tt] command handler failed:", error);
+      console.error("[OmniBox] command handler failed:", error);
     }
   });
 }
@@ -116,7 +116,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     return;
   }
   refreshTabAction(tabId, tab).catch((error) => {
-    console.error("[TIPICS-tt] Failed to refresh tab action:", error);
+    console.error("[OmniBox] Failed to refresh tab action:", error);
   });
 });
 
@@ -280,7 +280,7 @@ async function handleSendToApp(msg) {
     const response = await sendNativeMessage(message);
     return { ok: response?.ok ?? false, cookieSummary };
   } catch (e) {
-    const schemeResult = await openOmnigetScheme(url);
+    const schemeResult = await openOmniboxScheme(url);
     if (schemeResult?.ok) {
       return { ok: true, viaScheme: true, cookieSummary };
     }
@@ -436,7 +436,7 @@ function debounceCookieCapture(platform) {
 async function capturePlatformCookies(platform, force = false) {
   const lastSent = cookieLastSentAt.get(platform) || 0;
   if (!force && Date.now() - lastSent < COOKIE_AUTO_CAPTURE_MIN_INTERVAL_MS) {
-    console.debug("[TIPICS-tt] cookie capture throttled", platform);
+    console.debug("[OmniBox] cookie capture throttled", platform);
     return { ok: false, reason: "throttled" };
   }
   cookieLastSentAt.set(platform, Date.now());
@@ -445,11 +445,11 @@ async function capturePlatformCookies(platform, force = false) {
   try {
     cookies = await extractCookiesForPlatform(platform);
   } catch (e) {
-    console.warn("[TIPICS-tt] cookie extract failed", platform, e);
+    console.warn("[OmniBox] cookie extract failed", platform, e);
     return { ok: false, reason: "extract_failed", error: e.message };
   }
   if (!cookies || cookies.length === 0) {
-    console.debug("[TIPICS-tt] no cookies for platform", platform);
+    console.debug("[OmniBox] no cookies for platform", platform);
     return { ok: false, reason: "no_cookies" };
   }
 
@@ -462,14 +462,14 @@ async function capturePlatformCookies(platform, force = false) {
       timestamp: Date.now(),
     });
     console.info(
-      "[TIPICS-tt] cookies exported",
+      "[OmniBox] cookies exported",
       platform,
       cookies.length,
       response,
     );
     return { ok: true, count: cookies.length, response };
   } catch (e) {
-    console.warn("[TIPICS-tt] cookie export failed", platform, e.message);
+    console.warn("[OmniBox] cookie export failed", platform, e.message);
     return { ok: false, reason: "host_unreachable", error: e.message };
   }
 }
@@ -493,10 +493,10 @@ async function scanOpenTabsForCookies() {
       void capturePlatformCookies(platform, true);
     }
     if (seen.size === 0) {
-      console.info("[TIPICS-tt] no tracked tabs open at extension load");
+      console.info("[OmniBox] no tracked tabs open at extension load");
     }
   } catch (e) {
-    console.warn("[TIPICS-tt] scan tabs failed", e);
+    console.warn("[OmniBox] scan tabs failed", e);
   }
 }
 

@@ -17,25 +17,25 @@ const PLUGINS = [
 ];
 
 function appDataPluginsDir() {
-  if (process.env.OMNIGET_DATA_DIR) {
-    return path.join(process.env.OMNIGET_DATA_DIR, "plugins");
+  if (process.env.OMNIBOX_DATA_DIR) {
+    return path.join(process.env.OMNIBOX_DATA_DIR, "plugins");
   }
   const platform = process.platform;
   if (platform === "win32") {
     const base = process.env.APPDATA || path.join(os.homedir(), "AppData", "Roaming");
-    return path.join(base, "wtf.tonho.omniget", "plugins");
+    return path.join(base, "wtf.tonho.omnibox", "plugins");
   }
   if (platform === "darwin") {
     return path.join(
       os.homedir(),
       "Library",
       "Application Support",
-      "wtf.tonho.omniget",
+      "wtf.tonho.omnibox",
       "plugins",
     );
   }
   const xdg = process.env.XDG_DATA_HOME || path.join(os.homedir(), ".local", "share");
-  return path.join(xdg, "wtf.tonho.omniget", "plugins");
+  return path.join(xdg, "wtf.tonho.omnibox", "plugins");
 }
 
 function dllFilename(crate) {
@@ -66,8 +66,8 @@ function buildPlugin(repoDir) {
 }
 
 function main() {
-  if (process.env.OMNIGET_SKIP_PLUGIN_DEPLOY === "1") {
-    console.log("OMNIGET_SKIP_PLUGIN_DEPLOY=1 — skipping plugin deployment.");
+  if (process.env.OMNIBOX_SKIP_PLUGIN_DEPLOY === "1") {
+    console.log("OMNIBOX_SKIP_PLUGIN_DEPLOY=1 — skipping plugin deployment.");
     return;
   }
 

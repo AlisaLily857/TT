@@ -1,10 +1,10 @@
 pub fn app_data_dir() -> Option<std::path::PathBuf> {
-    if let Ok(dir) = std::env::var("TIPICS_TT_DATA_DIR") {
+    if let Ok(dir) = std::env::var("OMNIBOX_DATA_DIR") {
         return Some(std::path::PathBuf::from(dir));
     }
 
     let base = dirs::data_dir()?;
-    let new_path = base.join("wtf.tonho.tipics-tt");
+    let new_path = base.join("wtf.tonho.omnibox");
     let old_path = base.join("tipics-tt");
 
     if old_path.exists() {

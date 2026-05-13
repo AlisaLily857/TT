@@ -1,5 +1,5 @@
 [package]
-name = "tipics-tt-core"
+name = "omnibox-core"
 version = "0.2.16"
 edition = "2021"
 

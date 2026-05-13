@@ -56,7 +56,7 @@
     telegramCreateFolder,
     telegramDeleteChannel,
     telegramRenameChannel,
-    isOmnigetFolder,
+    isOmniboxFolder,
     studyPlaybackForChat,
     studyBookmarksToggle,
     studyBookmarksList,
@@ -694,9 +694,9 @@
       case "group":
         return c.chat_type === "group";
       case "channel":
-        return c.chat_type === "channel" && !isOmnigetFolder(c);
+        return c.chat_type === "channel" && !isOmniboxFolder(c);
       case "folder":
-        return isOmnigetFolder(c);
+        return isOmniboxFolder(c);
     }
   }
 
@@ -712,7 +712,7 @@
       } else if (c.chat_type === "group") {
         counts.group += 1;
       } else if (c.chat_type === "channel") {
-        if (isOmnigetFolder(c)) counts.folder += 1;
+        if (isOmniboxFolder(c)) counts.folder += 1;
         else counts.channel += 1;
       }
     }
@@ -924,7 +924,7 @@
         },
       },
     ];
-    if (isOmnigetFolder(c)) {
+    if (isOmniboxFolder(c)) {
       items.push({ separator: true });
       items.push({
         id: "rename",
@@ -2823,7 +2823,7 @@
         </button>
       {/if}
       <div class="crumb-spacer"></div>
-      {#if isOmnigetFolder(selectedChat)}
+      {#if isOmniboxFolder(selectedChat)}
         <button
           type="button"
           class="ghost-btn small"

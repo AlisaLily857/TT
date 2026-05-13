@@ -133,10 +133,10 @@ export function applyIframeTypography(iframe: HTMLIFrameElement | null, t: Typog
   try {
     const doc = iframe.contentDocument;
     if (!doc) return;
-    let style = doc.getElementById("__omniget_typography__") as HTMLStyleElement | null;
+    let style = doc.getElementById("__omnibox_typography__") as HTMLStyleElement | null;
     if (!style) {
       style = doc.createElement("style");
-      style.id = "__omniget_typography__";
+      style.id = "__omnibox_typography__";
       doc.head?.appendChild(style);
     }
     style.textContent = buildIframeCss(t);

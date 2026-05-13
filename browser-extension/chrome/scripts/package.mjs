@@ -40,7 +40,7 @@ function parseArgs() {
 
   if (!output) {
     const manifest = JSON.parse(readFileSync(join(EXTENSION_DIR, "manifest.json"), "utf8"));
-    output = resolve(`omniget-chrome-extension-v${version || manifest.version}.zip`);
+    output = resolve(`omnibox-chrome-extension-v${version || manifest.version}.zip`);
   }
 
   return { output, version };

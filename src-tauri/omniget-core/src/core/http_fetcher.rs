@@ -969,7 +969,7 @@ mod tests {
     async fn fetcher_downloads_small_file_streaming() {
         use std::io::Write;
         let temp_dir = std::env::temp_dir().join(format!(
-            "tipics_tt_http_fetcher_test_{}",
+            "omnibox_http_fetcher_test_{}",
             now_unix_nanos()
         ));
         std::fs::create_dir_all(&temp_dir).unwrap();
@@ -1093,7 +1093,7 @@ mod tests {
     #[tokio::test]
     async fn fetcher_downloads_multi_segment_with_range() {
         let temp_dir = std::env::temp_dir().join(format!(
-            "tipics_tt_http_fetcher_chunked_{}",
+            "omnibox_http_fetcher_chunked_{}",
             now_unix_nanos()
         ));
         std::fs::create_dir_all(&temp_dir).unwrap();
@@ -1152,7 +1152,7 @@ mod tests {
     #[tokio::test]
     async fn fetcher_resumes_from_sidecar_state() {
         let temp_dir = std::env::temp_dir().join(format!(
-            "tipics_tt_http_fetcher_resume_load_{}",
+            "omnibox_http_fetcher_resume_load_{}",
             now_unix_nanos()
         ));
         std::fs::create_dir_all(&temp_dir).unwrap();
@@ -1213,7 +1213,7 @@ mod tests {
     #[tokio::test]
     async fn fetcher_resume_sidecar_round_trip() {
         let temp_dir = std::env::temp_dir().join(format!(
-            "tipics_tt_http_fetcher_resume_{}",
+            "omnibox_http_fetcher_resume_{}",
             now_unix_nanos()
         ));
         std::fs::create_dir_all(&temp_dir).unwrap();

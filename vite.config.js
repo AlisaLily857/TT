@@ -31,7 +31,7 @@ function getVersion() {
 
 function i18nKeysPlugin({ strict } = { strict: false }) {
   return {
-    name: "omniget-i18n-keys",
+    name: "omnibox-i18n-keys",
     buildStart() {
       const script = path.join(configDir, "scripts", "generate-i18n-keys.js");
       if (!existsSync(script)) {
@@ -45,7 +45,7 @@ function i18nKeysPlugin({ strict } = { strict: false }) {
       if (result.status !== 0) {
         throw new Error(
           `generate-i18n-keys.js exited with code ${result.status}. ` +
-            `Fix locale keys or set OMNIGET_I18N_STRICT=0 to bypass.`,
+            `Fix locale keys or set OMNIBOX_I18N_STRICT=0 to bypass.`,
         );
       }
     },
@@ -56,8 +56,8 @@ export default defineConfig(async ({ command }) => {
   const gitInfo = getGitInfo();
   const isBuild = command === "build";
   const strictI18n =
-    process.env.OMNIGET_I18N_STRICT === "1" ||
-    (isBuild && process.env.OMNIGET_I18N_STRICT !== "0");
+    process.env.OMNIBOX_I18N_STRICT === "1" ||
+    (isBuild && process.env.OMNIBOX_I18N_STRICT !== "0");
 
   return {
     plugins: [

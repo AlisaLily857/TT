@@ -675,7 +675,7 @@ export function telegramSyncSettingsSet(args: { enabled?: boolean; intervalMin?:
   return pluginInvoke<TelegramSyncState>("telegram", "telegram_sync_settings_set", args);
 }
 
-export function isOmnigetFolder(chat: TelegramChat): boolean {
+export function isOmniboxFolder(chat: TelegramChat): boolean {
   if (chat.chat_type !== "channel") return false;
   return /\[og\]\s*$/i.test(chat.title);
 }

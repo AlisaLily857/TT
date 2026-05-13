@@ -3,7 +3,7 @@ import { getHlsGroupKey } from "../src/hls-grouping.js";
 import { normalizePageKey } from "../src/sniffer-storage.js";
 import { formatCookieSummary } from "../src/cookie-summary.js";
 
-const APP_URL = "https://github.com/tonhowtf/omniget/releases/latest";
+const APP_URL = "https://github.com/tonhowtf/omnibox/releases/latest";
 
 const SVG = {
   play: `<svg viewBox="0 0 20 20" fill="currentColor"><path d="M6.5 4v12l10-6z"/></svg>`,

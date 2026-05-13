@@ -444,7 +444,7 @@ pub async fn embed_metadata(
 
     let temp_dir = file.parent().unwrap_or(Path::new("."));
     let ext = file.extension().and_then(|e| e.to_str()).unwrap_or("mp4");
-    let temp_output = temp_dir.join(format!(".tipics_tt_meta_{}.{}", uuid::Uuid::new_v4(), ext));
+    let temp_output = temp_dir.join(format!(".omnibox_meta_{}.{}", uuid::Uuid::new_v4(), ext));
 
     let is_audio_only = matches!(
         ext.to_lowercase().as_str(),
@@ -594,11 +594,11 @@ async fn download_thumbnail(
         "jpg"
     };
 
-    let thumb_path = dest_dir.join(format!(".tipics_tt_thumb_{}.{}", uuid::Uuid::new_v4(), ext));
+    let thumb_path = dest_dir.join(format!(".omnibox_thumb_{}.{}", uuid::Uuid::new_v4(), ext));
     std::fs::write(&thumb_path, &bytes)?;
 
     if ext == "png" {
-        let jpg_path = dest_dir.join(format!(".tipics_tt_thumb_{}.jpg", uuid::Uuid::new_v4()));
+        let jpg_path = dest_dir.join(format!(".omnibox_thumb_{}.jpg", uuid::Uuid::new_v4()));
         let convert_result = crate::core::process::command("ffmpeg")
             .args([
                 "-y",

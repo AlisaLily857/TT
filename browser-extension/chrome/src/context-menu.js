@@ -1,4 +1,4 @@
-const MENU_ID = "omniget-download";
+const MENU_ID = "omnibox-download";
 
 export function registerContextMenu() {
   chrome.contextMenus.removeAll(() => {
