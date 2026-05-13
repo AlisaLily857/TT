@@ -430,8 +430,7 @@ async fn extract_cookies_for_uri(
     window
         .with_webview(move |platform_webview| unsafe {
             use webview2_com::Microsoft::Web::WebView2::Win32::*;
-            use windows::core::{Interface, HSTRING, PCWSTR, PWSTR};
-            use windows::Win32::Foundation::BOOL;
+            use windows::core::{Interface, BOOL, HSTRING, PCWSTR, PWSTR};
 
             let core = match platform_webview.controller().CoreWebView2() {
                 Ok(c) => c,
