@@ -197,7 +197,8 @@
       "lang_it": "Italiano",
       "lang_fr": "Français",
       "lang_es": "Español",
-      "lang_el": "Ελληνικά"
+      "lang_el": "Ελληνικά",
+      "lang_zh-TW": "繁體中文"
     },
     "download": {
       "default_output_dir": "Pasta padrão",

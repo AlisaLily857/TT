@@ -8,15 +8,8 @@
     debounceMs?: number;
   };
 
-  let { value, min, max, step = 1, onChange, debounceMs = 500 }: Props = $props();
-  let local = $state(value);
+  let { value = $bindable(), min, max, step = 1, onChange, debounceMs = 500 }: Props = $props();
   let timer: ReturnType<typeof setTimeout> | null = null;
-
-  $effect(() => {
-    if (value !== local && timer == null) {
-      local = value;
-    }
-  });
 
   function flush(next: number) {
     if (timer) clearTimeout(timer);
@@ -28,7 +21,7 @@
 
   function onInput(e: Event) {
     const v = Number((e.target as HTMLInputElement).value);
-    local = v;
+    value = v;
     flush(v);
   }
 
@@ -36,7 +29,7 @@
     return () => {
       if (timer) {
         clearTimeout(timer);
-        onChange(local);
+        onChange(value);
       }
     };
   });
@@ -47,12 +40,12 @@
   {min}
   {max}
   {step}
-  value={local}
+  value={value}
   oninput={onInput}
   class="slider"
   aria-valuemin={min}
   aria-valuemax={max}
-  aria-valuenow={local}
+  aria-valuenow={value}
 />
 
 <style>

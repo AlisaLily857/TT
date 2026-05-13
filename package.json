@@ -13,7 +13,6 @@
     "tauri": "tauri",
     "version:set": "node scripts/bump-version.js",
     "generate:i18n-keys": "node scripts/generate-i18n-keys.js",
-    "sync:locales": "node scripts/sync-locales.mjs",
     "plugins:deploy": "node scripts/deploy-plugins-local.mjs",
     "extension:sync": "node browser-extension/sync.mjs",
     "test": "vitest run",

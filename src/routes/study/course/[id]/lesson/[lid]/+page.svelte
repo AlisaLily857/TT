@@ -1621,72 +1621,7 @@
     min-width: 0;
     min-height: 0;
   }
-  .player-shell {
-    background: black;
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
-    position: relative;
-  }
-  .player-shell video {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-  .player-toolbar {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.55);
-    border-radius: 6px;
-    padding: 4px 6px;
-    color: #f5f5f5;
-    font-size: 12px;
-    backdrop-filter: blur(4px);
-    pointer-events: auto;
-    z-index: 2;
-  }
-  .speed-control {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .speed-label {
-    font-size: 11px;
-    opacity: 0.7;
-  }
-  .speed-select {
-    background: rgba(255, 255, 255, 0.12);
-    color: #f5f5f5;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 4px;
-    padding: 2px 4px;
-    font-size: 12px;
-    font-variant-numeric: tabular-nums;
-    cursor: pointer;
-  }
-  .speed-select option {
-    background: #1a1a1a;
-    color: #f5f5f5;
-  }
-  .theater-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: transparent;
-    color: inherit;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-size: 11px;
-    cursor: pointer;
-  }
-  .theater-toggle.active {
-    background: rgba(255, 255, 255, 0.18);
-  }
+
   :global(.lesson-page[data-theater="1"] .sidebar),
   :global(.lesson-page[data-theater="1"] .head),
   :global(.lesson-page[data-theater="1"] .lesson-progress),
@@ -2133,34 +2068,6 @@
     max-height: 100%;
     object-fit: contain;
   }
-  .lesson-progress {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 0 0 calc(var(--padding) * 0.75);
-  }
-  .lesson-progress-track {
-    flex: 1;
-    height: 4px;
-    background: color-mix(in oklab, var(--input-border) 30%, transparent);
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .lesson-progress-fill {
-    height: 100%;
-    background: var(--accent);
-    transition: width 200ms ease;
-  }
-  .lesson-progress-fill.complete {
-    background: var(--success);
-  }
-  .lesson-progress-pct {
-    font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: 11px;
-    color: var(--tertiary);
-    min-width: 36px;
-    text-align: right;
-  }
 
   .panel-tabs {
     margin-bottom: calc(var(--padding) * 0.75);
@@ -2192,11 +2099,6 @@
     color: var(--text);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .lesson-progress-fill {
-      transition: none;
-    }
-  }
 
   .btn.screenshot {
     padding: 6px 10px;

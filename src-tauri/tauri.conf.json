@@ -30,7 +30,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDYyOTlEMzE0MUJDMkREMTkKUldRWjNjSWJGTk9aWWtnazV5aTdTNTZ4dk93TVh3cUpxSWlpclRXNjlwYXA1ZXdrdlZsYUxQYzkK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXkgMkIwRjE0MDg2ODExOTc1ClJXUjFHWUdHUVBHd0FydVBCMEU1aXlNRnFqVXkyY0QvekZqWmlBc0djcFNNT0Z6blV4NGlKMGdnCg==",
       "endpoints": [
         "https://github.com/AlisaLily857/OmniBox/releases/latest/download/latest.json"
       ]

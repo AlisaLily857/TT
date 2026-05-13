@@ -5,19 +5,12 @@
     debounceMs?: number;
   };
 
-  let { value, onChange, debounceMs = 500 }: Props = $props();
-  let local = $state(value);
+  let { value = $bindable(), onChange, debounceMs = 500 }: Props = $props();
   let timer: ReturnType<typeof setTimeout> | null = null;
-
-  $effect(() => {
-    if (value !== local && timer == null) {
-      local = value;
-    }
-  });
 
   function onInput(e: Event) {
     const v = (e.target as HTMLInputElement).value;
-    local = v;
+    value = v;
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
       timer = null;
@@ -29,15 +22,15 @@
     return () => {
       if (timer) {
         clearTimeout(timer);
-        onChange(local);
+        onChange(value);
       }
     };
   });
 </script>
 
 <label class="color">
-  <input type="color" value={local} oninput={onInput} aria-label="Cor" />
-  <span class="hex">{local}</span>
+  <input type="color" value={value} oninput={onInput} aria-label="Cor" />
+  <span class="hex">{value}</span>
 </label>
 
 <style>

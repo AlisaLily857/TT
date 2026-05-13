@@ -1,4 +1,4 @@
-# Contributing to OmniGet
+# Contributing to OmniBox
 
 Thanks for taking the time to contribute.
 

@@ -1,6 +1,6 @@
 # Estudo: tdl-master — Implementação de Download do Telegram
 
-Estudo completo da implementação de download do [tdl](https://github.com/iyear/tdl) (Go), com foco em traduzir os padrões para Rust/grammers no OmniGet.
+Estudo completo da implementação de download do [tdl](https://github.com/iyear/tdl) (Go), com foco em traduzir os padrões para Rust/grammers no OmniBox.
 
 ---
 
@@ -20,9 +20,9 @@ core/middlewares/  → Retry, Recovery, FloodWait, Takeout
 
 ## 2. A Chave: DC Proativo (Não Reativo)
 
-### O problema que temos no OmniGet
+### O problema que temos no OmniBox
 
-O OmniGet usa `client.invoke(&request)` para baixar arquivos. Quando o arquivo está em outro DC (ex: DC 4), Telegram retorna `FILE_MIGRATE_4`. O grammers tenta lidar internamente no `iter_download`, mas nosso código custom (`download_parallel`) não consegue porque `copy_auth_to_dc()` é `pub(crate)`.
+O OmniBox usa `client.invoke(&request)` para baixar arquivos. Quando o arquivo está em outro DC (ex: DC 4), Telegram retorna `FILE_MIGRATE_4`. O grammers tenta lidar internamente no `iter_download`, mas nosso código custom (`download_parallel`) não consegue porque `copy_auth_to_dc()` é `pub(crate)`.
 
 ### Como o tdl resolve
 
@@ -407,11 +407,11 @@ tg.InvokeWithTakeoutRequest{TakeoutID: sid, Query: request}
 c.API().AccountFinishTakeoutSession(ctx, &tg.AccountFinishTakeoutSessionRequest{Success: true})
 ```
 
-Útil para downloads massivos. Pode ser implementado como feature futura no OmniGet.
+Útil para downloads massivos. Pode ser implementado como feature futura no OmniBox.
 
 ---
 
-## 10. Plano de Implementação para o OmniGet
+## 10. Plano de Implementação para o OmniBox
 
 ### Passo 1: Extrair dc_id da media
 
@@ -519,9 +519,9 @@ Para downloads massivos de canais inteiros.
 
 ---
 
-## 11. Diferenças Chave: tdl (gotd) vs OmniGet (grammers)
+## 11. Diferenças Chave: tdl (gotd) vs OmniBox (grammers)
 
-| Aspecto | tdl (gotd/Go) | OmniGet (grammers/Rust) |
+| Aspecto | tdl (gotd/Go) | OmniBox (grammers/Rust) |
 |---------|---------------|------------------------|
 | DC Pool | `api.DC(ctx, dc, size)` — pool de N conexões por DC | `client.invoke_in_dc(dc, &req)` — uma conexão |
 | Auth Transfer | `api.DC()` faz internamente | `invoke_in_dc` chama `copy_auth_to_dc()` internamente |

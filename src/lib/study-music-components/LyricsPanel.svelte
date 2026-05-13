@@ -73,7 +73,7 @@
 </script>
 
 {#if musicUI.lyricsOpen}
-  <aside class="lyrics-panel" role="complementary">
+  <aside class="lyrics-panel">
     <header class="head">
       <h3>{$t("study.music.lyrics_title")}</h3>
       <div class="actions">

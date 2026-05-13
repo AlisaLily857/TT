@@ -25,15 +25,15 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: lts/*
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -47,53 +47,38 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf xdg-utils
 
       - name: Install frontend dependencies
         run: pnpm install
 
-      # --- macOS Signing (self-signed for testing) ---
-      - name: Setup macOS certificate
-        if: matrix.platform == 'macos-latest'
-        continue-on-error: true
-        env:
-          APPLE_CERT_B64: ${{ secrets.APPLE_CERTIFICATE }}
-        run: |
-          if [ -z "$APPLE_CERT_B64" ]; then
-            echo "No APPLE_CERTIFICATE secret set, skipping macOS signing setup"
-            exit 0
-          fi
-          echo "$APPLE_CERT_B64" | base64 -d > /tmp/macos.p12
-          security create-keychain -p "omnibox" /tmp/omnibox.keychain
-          security unlock-keychain -p "omnibox" /tmp/omnibox.keychain
-          security import /tmp/macos.p12 -k /tmp/omnibox.keychain -P "omnibox" -T /usr/bin/codesign
-          security set-keychain-settings -t 3600 -u /tmp/omnibox.keychain
-          security list-keychains -s /tmp/omnibox.keychain
-          security default-keychain -s /tmp/omnibox.keychain
-
-      # --- Windows Signing (self-signed for testing) ---
-      - name: Setup Windows certificate
-        if: matrix.platform == 'windows-latest'
-        continue-on-error: true
-        env:
-          WIN_CERT_B64: ${{ secrets.WINDOWS_CERTIFICATE }}
-        run: |
-          if (-not $env:WIN_CERT_B64) {
-            Write-Host "No WINDOWS_CERTIFICATE secret set, skipping Windows signing setup"
-            exit 0
-          }
-          $certBytes = [Convert]::FromBase64String($env:WIN_CERT_B64)
-          [IO.File]::WriteAllBytes("D:\omnibox.pfx", $certBytes)
-
-      - name: Build Tauri
+      - name: Build Tauri (PR)
+        if: github.event_name == 'pull_request'
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          APPLE_CERTIFICATE: /tmp/macos.p12
-          APPLE_CERTIFICATE_PASSWORD: omnibox
-          APPLE_SIGNING_IDENTITY: 'OmniBox'
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
           WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
-          WINDOWS_CERTIFICATE_PASSWORD: omnibox
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          args: ${{ matrix.args }}
+
+      - name: Build Tauri (Release)
+        if: github.event_name != 'pull_request'
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: v__VERSION__
           releaseName: 'OmniBox v__VERSION__'

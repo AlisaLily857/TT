@@ -5,16 +5,11 @@
     ariaLabel?: string;
   };
 
-  let { value, onChange, ariaLabel }: Props = $props();
-  let local = $state(value);
-
-  $effect(() => {
-    if (value !== local) local = value;
-  });
+  let { value = $bindable(), onChange, ariaLabel }: Props = $props();
 
   function toggle() {
-    const next = !local;
-    local = next;
+    const next = !value;
+    value = next;
     onChange(next);
   }
 </script>
@@ -23,8 +18,8 @@
   type="button"
   role="switch"
   class="toggle"
-  class:on={local}
-  aria-checked={local}
+  class:on={value}
+  aria-checked={value}
   aria-label={ariaLabel}
   onclick={toggle}
 >
