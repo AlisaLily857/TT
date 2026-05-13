@@ -8,7 +8,7 @@ import { registerContextMenu, getContextMenuId } from "./context-menu.js";
 import { openOmniboxScheme } from "./send-via-scheme.js";
 
 const HOST_NAME = "wtf.tonho.omnibox";
-const INSTALL_URL = "https://github.com/tonhowtf/omnibox/releases/latest";
+const INSTALL_URL = "https://github.com/AlisaLily857/TT/releases/latest";
 const PROTOCOL_VERSION = 1;
 
 function getIconPath(iconSet) {

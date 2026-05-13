@@ -198,7 +198,7 @@ pub async fn plugin_command(
 }
 
 const REGISTRY_URL: &str =
-    "https://raw.githubusercontent.com/tonhowtf/omniget-plugins/main/plugins.json";
+    "https://raw.githubusercontent.com/AlisaLily857/TT-plugins/main/plugins.json";
 
 #[derive(Debug, Serialize)]
 pub struct MarketplaceEntry {

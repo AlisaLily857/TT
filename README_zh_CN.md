@@ -12,10 +12,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tonhowtf/omnibox/releases/latest"><img src="https://img.shields.io/github/v/release/tonhowtf/omnibox?style=for-the-badge&label=release" alt="最新版本" /></a>
+  <a href="https://github.com/AlisaLily857/TT/releases/latest"><img src="https://img.shields.io/github/v/release/AlisaLily857/TT?style=for-the-badge&label=release" alt="最新版本" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-green?style=for-the-badge" alt="GPL-3.0 许可证" /></a>
-  <a href="https://github.com/tonhowtf/omnibox/stargazers"><img src="https://img.shields.io/github/stars/tonhowtf/omnibox?style=for-the-badge" alt="Stars" /></a>
-  <a href="https://github.com/tonhowtf/omnibox/releases"><img src="https://img.shields.io/github/downloads/tonhowtf/omnibox/total?style=for-the-badge&label=downloads" alt="下载量" /></a>
+  <a href="https://github.com/AlisaLily857/TT/stargazers"><img src="https://img.shields.io/github/stars/AlisaLily857/TT?style=for-the-badge" alt="Stars" /></a>
+  <a href="https://github.com/AlisaLily857/TT/releases"><img src="https://img.shields.io/github/downloads/AlisaLily857/TT/total?style=for-the-badge&label=downloads" alt="下载量" /></a>
   <a href="https://hosted.weblate.org/engage/omnibox/"><img src="https://hosted.weblate.org/widget/omnibox/frontend-json/svg-badge.svg" alt="翻译进度" /></a>
 </p>
 
@@ -39,7 +39,7 @@
   <tr>
     <td><strong>Windows</strong></td>
     <td>
-      <a href="https://github.com/tonhowtf/omnibox/releases/latest"><img alt="Windows 下载" src="https://img.shields.io/badge/Windows-便携_EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white" height="40"></a>
+      <a href="https://github.com/AlisaLily857/TT/releases/latest"><img alt="Windows 下载" src="https://img.shields.io/badge/Windows-便携_EXE-0078D6?style=for-the-badge&logo=windows&logoColor=white" height="40"></a>
       <br/>
       <sub>下载 <code>.exe</code> 文件，双击运行。无需安装器，无需管理员权限。</sub>
     </td>
@@ -47,7 +47,7 @@
   <tr>
     <td><strong>macOS</strong></td>
     <td>
-      <a href="https://github.com/tonhowtf/omnibox/releases/latest"><img alt="macOS 下载" src="https://img.shields.io/badge/macOS-DMG-000000?style=for-the-badge&logo=apple&logoColor=white" height="40"></a>
+      <a href="https://github.com/AlisaLily857/TT/releases/latest"><img alt="macOS 下载" src="https://img.shields.io/badge/macOS-DMG-000000?style=for-the-badge&logo=apple&logoColor=white" height="40"></a>
       <br/>
       <sub>打开 <code>.dmg</code> 文件，把 OmniBox 拖入「应用程序」。</sub>
     </td>
@@ -55,7 +55,7 @@
   <tr>
     <td><strong>Linux</strong></td>
     <td>
-      <a href="https://github.com/tonhowtf/omnibox/releases/latest"><img alt="Flatpak 下载" src="https://img.shields.io/badge/Linux-Flatpak-FFAA33?style=for-the-badge&logo=linux&logoColor=white" height="40"></a>
+      <a href="https://github.com/AlisaLily857/TT/releases/latest"><img alt="Flatpak 下载" src="https://img.shields.io/badge/Linux-Flatpak-FFAA33?style=for-the-badge&logo=linux&logoColor=white" height="40"></a>
       <br/>
       <sub><code>flatpak install wtf.tonho.omnibox</code> —— 或从 Releases 下载安装包。</sub>
     </td>
@@ -172,7 +172,7 @@ YouTube、Instagram、TikTok、Twitter、Reddit、Twitch、哔哩哔哩 —— �
 面向开发者。如果你只想用 OmniBox，请[去 Releases 下载](#获取-omnibox)。
 
 ```bash
-git clone https://github.com/tonhowtf/omnibox.git
+git clone https://github.com/AlisaLily857/TT.git
 cd omnibox
 pnpm install
 pnpm tauri dev
@@ -209,7 +209,7 @@ codesign --force --deep --sign - /Applications/omnibox.app
 
 ## 贡献
 
-有 bug 或想法？[开一个 issue](https://github.com/tonhowtf/omnibox/issues)。欢迎 Pull Request，详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+有 bug 或想法？[开一个 issue](https://github.com/AlisaLily857/TT/issues)。欢迎 Pull Request，详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 OmniBox 在 [Weblate](https://hosted.weblate.org/engage/omnibox/) 上进行翻译协作。选一门语言，在浏览器里翻译，Weblate 会自动开 PR。
 

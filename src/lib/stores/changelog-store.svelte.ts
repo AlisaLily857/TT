@@ -71,7 +71,7 @@ export async function fetchChangelog(): Promise<string> {
 
   try {
     const res = await fetch(
-      `https://api.github.com/repos/tonhowtf/omnibox/releases/tags/v${currentVersion}`,
+      `https://api.github.com/repos/AlisaLily857/TT/releases/tags/v${currentVersion}`,
       { headers: { Accept: "application/vnd.github.v3+json" } }
     );
     if (res.ok) {
@@ -85,7 +85,7 @@ export async function fetchChangelog(): Promise<string> {
 
   try {
     const res = await fetch(
-      "https://api.github.com/repos/tonhowtf/omnibox/releases/latest",
+      "https://api.github.com/repos/AlisaLily857/TT/releases/latest",
       { headers: { Accept: "application/vnd.github.v3+json" } }
     );
     if (res.ok) {

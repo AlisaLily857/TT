@@ -2,7 +2,7 @@
   import { open } from "@tauri-apps/plugin-shell";
   import { t } from "$lib/i18n";
 
-  const GITHUB_URL = "https://github.com/tonhowtf/omnibox";
+  const GITHUB_URL = "https://github.com/AlisaLily857/TT";
   const APP_VERSION = "0.6.0";
 
   async function openGitHub() {
@@ -14,7 +14,7 @@
   <p class="star-description">{$t('about.star_description')}</p>
   <div class="star-iframe-wrapper">
     <iframe
-      src="https://ghbtns.com/github-btn.html?user=tonhowtf&repo=omnibox&type=star&count=true&size=large"
+      src="https://ghbtns.com/github-btn.html?user=AlisaLily857user=tonhowtf&repo=omniboxrepo=TT&type=star&count=true&size=large"
       frameborder="0"
       scrolling="0"
       width="170"

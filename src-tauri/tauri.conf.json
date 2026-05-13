@@ -32,7 +32,7 @@
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDYyOTlEMzE0MUJDMkREMTkKUldRWjNjSWJGTk9aWWtnazV5aTdTNTZ4dk93TVh3cUpxSWlpclRXNjlwYXA1ZXdrdlZsYUxQYzkK",
       "endpoints": [
-        "https://github.com/YOUR_USERNAME/omnibox/releases/latest/download/latest.json"
+        "https://github.com/AlisaLily857/TT/releases/latest/download/latest.json"
       ]
     },
     "deep-link": {
