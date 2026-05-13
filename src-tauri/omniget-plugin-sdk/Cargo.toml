@@ -1,5 +1,5 @@
 [package]
-name = "omniget-plugin-sdk"
+name = "tipics-tt-plugin-sdk"
 version = "0.2.0"
 edition = "2021"
 description = "SDK for building OmniGet plugins"

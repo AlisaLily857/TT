@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "omniget",
+  "productName": "TIPICS-tt",
   "version": "0.6.0",
-  "identifier": "wtf.tonho.omniget",
+  "identifier": "wtf.tonho.tipics-tt",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "omniget",
+        "title": "TIPICS-tt",
         "width": 800,
         "height": 600,
         "backgroundColor": "#0a0a0a"
@@ -32,13 +32,13 @@
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDYyOTlEMzE0MUJDMkREMTkKUldRWjNjSWJGTk9aWWtnazV5aTdTNTZ4dk93TVh3cUpxSWlpclRXNjlwYXA1ZXdrdlZsYUxQYzkK",
       "endpoints": [
-        "https://github.com/tonhowtf/omniget/releases/latest/download/latest.json"
+        "https://github.com/YOUR_USERNAME/tipics-tt/releases/latest/download/latest.json"
       ]
     },
     "deep-link": {
       "desktop": {
         "schemes": [
-          "omniget"
+          "tipics-tt"
         ]
       }
     }

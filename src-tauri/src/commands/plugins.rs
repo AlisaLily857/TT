@@ -220,7 +220,7 @@ pub async fn fetch_marketplace_registry(
     state: tauri::State<'_, Arc<tokio::sync::RwLock<PluginManager>>>,
 ) -> Result<Vec<MarketplaceEntry>, String> {
     let client = reqwest::Client::builder()
-        .user_agent("OmniGet")
+        .user_agent("TIPICS-tt")
         .timeout(std::time::Duration::from_secs(15))
         .build()
         .map_err(|e| e.to_string())?;
@@ -310,7 +310,7 @@ pub async fn install_plugin_zip_from_repo(
     }
 
     let client = reqwest::Client::builder()
-        .user_agent("OmniGet")
+        .user_agent("TIPICS-tt")
         .build()
         .map_err(|e| e.to_string())?;
 
@@ -450,7 +450,7 @@ pub async fn check_plugin_updates(
     };
 
     let client = reqwest::Client::builder()
-        .user_agent("OmniGet")
+        .user_agent("TIPICS-tt")
         .timeout(std::time::Duration::from_secs(15))
         .build()
         .map_err(|e| e.to_string())?;

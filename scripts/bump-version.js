@@ -121,7 +121,7 @@ const cargoLockPath = path.join(root, "src-tauri", "Cargo.lock");
 if (fs.existsSync(cargoLockPath)) {
   writeText(cargoLockPath, (content) => {
     return content.replace(
-      /(name = "omniget"\nversion = ")([^"]+)(")/,
+      /(name = "tipics-tt"\nversion = ")([^"]+)(")/,
       (_, a, _b, c) => `${a}${version}${c}`
     );
   });
@@ -172,7 +172,7 @@ function hasBinary(name) {
   }
 }
 
-const metainfoAbs = path.join(root, "flatpak", "wtf.tonho.omniget.metainfo.xml");
+const metainfoAbs = path.join(root, "flatpak", "wtf.tonho.tipics-tt.metainfo.xml");
 if (hasBinary("appstreamcli")) {
   try {
     execSync(`appstreamcli validate "${metainfoAbs}"`, { stdio: "inherit" });

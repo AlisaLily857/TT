@@ -1,5 +1,5 @@
 [package]
-name = "omniget-core"
+name = "tipics-tt-core"
 version = "0.2.16"
 edition = "2021"
 

@@ -1,7 +1,7 @@
 {
-  "name": "omniget",
+  "name": "tipics-tt",
   "version": "0.6.0",
-  "description": "",
+  "description": "TIPICS-tt - Download and consume content",
   "type": "module",
   "packageManager": "pnpm@10.29.3",
   "scripts": {

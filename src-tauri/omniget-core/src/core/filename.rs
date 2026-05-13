@@ -87,7 +87,7 @@ mod tests {
     fn omniget_prefix_basic() {
         let name = "omniget-My Video Title [abc123]";
         let result = sanitize_path_component(name);
-        assert!(result.starts_with("omniget-"));
+        assert!(result.starts_with("tipics-tt-"));
         assert!(!result.contains(':'));
     }
 
@@ -95,7 +95,7 @@ mod tests {
     fn omniget_prefix_with_special_chars() {
         let name = "omniget-Video: \"Best\" <2024> [id]";
         let result = sanitize_path_component(name);
-        assert!(result.starts_with("omniget-"));
+        assert!(result.starts_with("tipics-tt-"));
     }
 
     #[test]
@@ -103,7 +103,7 @@ mod tests {
         let long_title = "a".repeat(250);
         let name = format!("omniget-{} [id]", long_title);
         let result = sanitize_path_component(&name);
-        assert!(result.starts_with("omniget-"));
+        assert!(result.starts_with("tipics-tt-"));
         assert!(result.ends_with("[id]"));
     }
 }

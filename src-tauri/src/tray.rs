@@ -53,7 +53,7 @@ impl BadgeCache {
 }
 
 pub fn setup(app: &AppHandle) -> tauri::Result<()> {
-    let open_item = MenuItemBuilder::with_id("open", "OmniGet").build(app)?;
+    let open_item = MenuItemBuilder::with_id("open", "TIPICS-tt").build(app)?;
     let downloads_item = MenuItemBuilder::with_id("downloads", active_label(0))
         .enabled(false)
         .build(app)?;
@@ -79,7 +79,7 @@ pub fn setup(app: &AppHandle) -> tauri::Result<()> {
 
     TrayIconBuilder::with_id("main-tray")
         .icon(icon)
-        .tooltip("OmniGet")
+        .tooltip("TIPICS-tt")
         .menu(&menu)
         .on_menu_event(|app, event| match event.id().as_ref() {
             "open" => show_window(app),
@@ -115,9 +115,9 @@ pub fn update_active_count(app: &AppHandle, count: u32) {
 
     if let Some(tray) = app.tray_by_id("main-tray") {
         let tooltip = if count > 0 {
-            format!("OmniGet — {} active", count)
+            format!("TIPICS-tt — {} active", count)
         } else {
-            "OmniGet".into()
+            "TIPICS-tt".into()
         };
         let _ = tray.set_tooltip(Some(&tooltip));
 

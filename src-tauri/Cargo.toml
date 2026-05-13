@@ -1,16 +1,16 @@
 [workspace]
-members = [".", "omniget-core", "omniget-plugin-sdk"]
+members = [".", "tipics-tt-core", "tipics-tt-plugin-sdk"]
 resolver = "2"
 
 [package]
-name = "omniget"
+name = "tipics-tt"
 version = "0.6.0"
-description = "A Tauri App"
+description = "TIPICS-tt - Download and consume content"
 authors = ["you"]
 edition = "2021"
 
 [lib]
-name = "omniget_lib"
+name = "tipics_tt_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
@@ -52,8 +52,8 @@ tar = "0.4"
 xz2 = { version = "0.1", features = ["static"] }
 sha2 = "0.10"
 open = "5"
-omniget-core = { path = "omniget-core", features = ["desktop"] }
-omniget-plugin-sdk = { path = "omniget-plugin-sdk" }
+tipics-tt-core = { path = "tipics-tt-core", features = ["desktop"] }
+tipics-tt-plugin-sdk = { path = "tipics-tt-plugin-sdk" }
 libloading = "0.8"
 which = "7"
 librqbit = "8.1.1"

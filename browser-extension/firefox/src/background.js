@@ -99,7 +99,7 @@ if (chrome.commands && chrome.commands.onCommand) {
         try { await chrome.action.openPopup(); } catch {}
       }
     } catch (error) {
-      console.error("[OmniGet] command handler failed:", error);
+      console.error("[TIPICS-tt] command handler failed:", error);
     }
   });
 }
@@ -116,7 +116,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     return;
   }
   refreshTabAction(tabId, tab).catch((error) => {
-    console.error("[OmniGet] Failed to refresh tab action:", error);
+    console.error("[TIPICS-tt] Failed to refresh tab action:", error);
   });
 });
 
@@ -436,7 +436,7 @@ function debounceCookieCapture(platform) {
 async function capturePlatformCookies(platform, force = false) {
   const lastSent = cookieLastSentAt.get(platform) || 0;
   if (!force && Date.now() - lastSent < COOKIE_AUTO_CAPTURE_MIN_INTERVAL_MS) {
-    console.debug("[OmniGet] cookie capture throttled", platform);
+    console.debug("[TIPICS-tt] cookie capture throttled", platform);
     return { ok: false, reason: "throttled" };
   }
   cookieLastSentAt.set(platform, Date.now());
@@ -445,11 +445,11 @@ async function capturePlatformCookies(platform, force = false) {
   try {
     cookies = await extractCookiesForPlatform(platform);
   } catch (e) {
-    console.warn("[OmniGet] cookie extract failed", platform, e);
+    console.warn("[TIPICS-tt] cookie extract failed", platform, e);
     return { ok: false, reason: "extract_failed", error: e.message };
   }
   if (!cookies || cookies.length === 0) {
-    console.debug("[OmniGet] no cookies for platform", platform);
+    console.debug("[TIPICS-tt] no cookies for platform", platform);
     return { ok: false, reason: "no_cookies" };
   }
 
@@ -462,14 +462,14 @@ async function capturePlatformCookies(platform, force = false) {
       timestamp: Date.now(),
     });
     console.info(
-      "[OmniGet] cookies exported",
+      "[TIPICS-tt] cookies exported",
       platform,
       cookies.length,
       response,
     );
     return { ok: true, count: cookies.length, response };
   } catch (e) {
-    console.warn("[OmniGet] cookie export failed", platform, e.message);
+    console.warn("[TIPICS-tt] cookie export failed", platform, e.message);
     return { ok: false, reason: "host_unreachable", error: e.message };
   }
 }
@@ -493,10 +493,10 @@ async function scanOpenTabsForCookies() {
       void capturePlatformCookies(platform, true);
     }
     if (seen.size === 0) {
-      console.info("[OmniGet] no tracked tabs open at extension load");
+      console.info("[TIPICS-tt] no tracked tabs open at extension load");
     }
   } catch (e) {
-    console.warn("[OmniGet] scan tabs failed", e);
+    console.warn("[TIPICS-tt] scan tabs failed", e);
   }
 }
 

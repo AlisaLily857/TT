@@ -14,12 +14,12 @@ const MAX_MESSAGE_LENGTH: usize = 1_048_576;
 const MAX_COOKIES_PER_REQUEST: usize = 500;
 
 #[cfg(target_os = "windows")]
-const HOST_COPY_NAME: &str = "omniget-native-host.exe";
+const HOST_COPY_NAME: &str = "tipics-tt-native-host.exe";
 #[cfg(not(target_os = "windows"))]
-const HOST_COPY_NAME: &str = "omniget-native-host";
-const HOST_BINARY_STEM: &str = "omniget-native-host";
+const HOST_COPY_NAME: &str = "tipics-tt-native-host";
+const HOST_BINARY_STEM: &str = "tipics-tt-native-host";
 const HOST_CONFIG_NAME: &str = "native-host-config.json";
-const HOST_MANIFEST_NAME: &str = "wtf.tonho.omniget.json";
+const HOST_MANIFEST_NAME: &str = "wtf.tonho.tipics-tt.json";
 
 #[derive(Debug, Deserialize)]
 struct NativeHostRequest {
@@ -288,7 +288,7 @@ fn write_host_manifest(manifest_path: &Path, host_exe: &Path) -> anyhow::Result<
 fn build_host_manifest(host_exe: &Path) -> serde_json::Value {
     serde_json::json!({
         "name": CHROME_HOST_NAME,
-        "description": "OmniGet native host for Chrome",
+        "description": "TIPICS-tt native host for Chrome",
         "path": host_exe.to_string_lossy().to_string(),
         "type": "stdio",
         "allowed_origins": chrome_allowed_origins()
@@ -388,7 +388,7 @@ fn register_host_manifest(_manifest_path: &Path) -> anyhow::Result<()> {
 fn build_firefox_manifest(host_exe: &Path) -> serde_json::Value {
     serde_json::json!({
         "name": CHROME_HOST_NAME,
-        "description": "OmniGet native host for Firefox",
+        "description": "TIPICS-tt native host for Firefox",
         "path": host_exe.to_string_lossy().to_string(),
         "type": "stdio",
         "allowed_extensions": [FIREFOX_EXTENSION_ID]
@@ -792,7 +792,7 @@ fn handle_request(request: NativeHostRequest) -> NativeHostResponse {
                 ok: false,
                 code: Some("UNSUPPORTED_PROTOCOL"),
                 message: Some(format!(
-                    "Extension protocol v{} is newer than host v{}. Please update OmniGet.",
+                    "Extension protocol v{} is newer than host v{}. Please update TIPICS-tt.",
                     client_version, HOST_MAX_PROTOCOL_VERSION
                 )),
             };
@@ -857,7 +857,7 @@ fn handle_request(request: NativeHostRequest) -> NativeHostResponse {
         }
         if !cookies.is_empty() {
             if let Err(e) = write_extension_cookies(cookies) {
-                eprintln!("[OmniGet] Warning: failed to write extension cookies: {e}");
+                eprintln!("[TIPICS-tt] Warning: failed to write extension cookies: {e}");
             }
         }
     }
@@ -872,7 +872,7 @@ fn handle_request(request: NativeHostRequest) -> NativeHostResponse {
         || request.user_agent.is_some()
     {
         if let Err(e) = write_extension_metadata(&request) {
-            eprintln!("[OmniGet] Warning: failed to write extension metadata: {e}");
+            eprintln!("[TIPICS-tt] Warning: failed to write extension metadata: {e}");
         }
     }
 
@@ -950,10 +950,10 @@ mod tests {
     #[test]
     fn host_copy_name_matches_platform() {
         #[cfg(target_os = "windows")]
-        assert_eq!(HOST_COPY_NAME, "omniget-native-host.exe");
+        assert_eq!(HOST_COPY_NAME, "tipics-tt-native-host.exe");
 
         #[cfg(not(target_os = "windows"))]
-        assert_eq!(HOST_COPY_NAME, "omniget-native-host");
+        assert_eq!(HOST_COPY_NAME, "tipics-tt-native-host");
     }
 
     #[test]
@@ -1024,17 +1024,17 @@ mod tests {
     #[test]
     fn build_host_manifest_contains_expected_fields() {
         #[cfg(target_os = "windows")]
-        let host_exe = Path::new(r"C:\tmp\omniget-native-host.exe");
+        let host_exe = Path::new(r"C:\tmp\tipics-tt-native-host.exe");
 
         #[cfg(not(target_os = "windows"))]
-        let host_exe = Path::new("/tmp/omniget-native-host");
+        let host_exe = Path::new("/tmp/tipics-tt-native-host");
 
         let manifest = build_host_manifest(host_exe);
 
         assert_eq!(manifest["name"].as_str(), Some(CHROME_HOST_NAME));
         assert_eq!(
             manifest["description"].as_str(),
-            Some("OmniGet native host for Chrome")
+            Some("TIPICS-tt native host for Chrome")
         );
         assert_eq!(
             manifest["path"].as_str(),
