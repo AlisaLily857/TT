@@ -27,9 +27,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Ensure Cargo in PATH
-        if: matrix.platform == 'macos-latest'
-        run: echo "/Users/runner/.cargo/bin" >> 
 
       - name: Setup Node.js
         uses: actions/setup-node@v6

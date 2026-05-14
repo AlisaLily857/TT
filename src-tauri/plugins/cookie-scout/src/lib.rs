@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use omnibox_plugin_sdk::{export_plugin, OmnigetPlugin, PluginHost};
+use omniget_plugin_sdk::{export_plugin, OmnigetPlugin, PluginHost};
 use serde_json::json;
 
 pub struct CookieScoutPlugin {
