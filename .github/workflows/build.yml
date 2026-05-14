@@ -52,24 +52,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf xdg-utils
 
-      - name: Debug cargo (macOS x86_64)
-        if: matrix.platform == 'macos-latest' && contains(matrix.args, 'x86_64')
-        run: |
-          echo "=== PATH ==="
-          echo "$PATH"
-          echo "=== which cargo ==="
-          which cargo || echo "cargo not found"
-          echo "=== cargo --version ==="
-          cargo --version || echo "cargo --version failed"
-          echo "=== ls ~/.cargo/bin ==="
-          ls -la ~/.cargo/bin/ || echo "~/.cargo/bin not found"
-          echo "=== file ~/.cargo/bin/cargo ==="
-          file ~/.cargo/bin/cargo || echo "file command failed"
-          echo "=== cargo metadata test ==="
-          cd src-tauri && cargo metadata --no-deps --format-version 1 || echo "cargo metadata failed"
-          echo "=== rustc --version ==="
-          rustc --version || echo "rustc --version failed"
-
       - name: Install frontend dependencies
         run: pnpm install
 
