@@ -6,24 +6,25 @@
   <title>Cookie Scout</title>
   <style>
     :root {
-      --bg-primary: #1a1a2e;
-      --bg-secondary: #16213e;
-      --bg-card: #0f3460;
-      --text-primary: #e0e0e0;
-      --text-secondary: #a0a0b0;
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #141420;
+      --bg-card: #1a1a2e;
+      --bg-hover: #222240;
+      --text-primary: #e8e8f0;
+      --text-secondary: #a0a0b8;
+      --text-muted: #686880;
       --accent: #e94560;
-      --accent-hover: #c73550;
+      --accent-hover: #ff5577;
       --border: #2a2a4a;
-      --success: #4caf50;
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --info: #60a5fa;
       --radius: 12px;
-      --shadow: 0 4px 16px rgba(0,0,0,0.35);
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -34,155 +35,195 @@
       padding: 24px;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    .container { max-width: 960px; margin: 0 auto; }
 
     header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
     }
 
     header h1 {
-      font-size: 2rem;
+      font-size: 1.75rem;
       font-weight: 700;
-      margin-bottom: 8px;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
+      gap: 10px;
+      margin-bottom: 6px;
     }
 
-    header p {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-    }
+    header p { color: var(--text-secondary); font-size: 0.9rem; }
 
     .cookie-icon {
-      width: 36px;
-      height: 36px;
-      fill: var(--accent);
+      width: 32px; height: 32px; fill: var(--accent);
     }
 
-    .card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-    }
+    .section { margin-bottom: 24px; }
 
-    .card h2 {
-      font-size: 1.15rem;
-      margin-bottom: 16px;
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 14px;
       color: var(--text-primary);
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .platforms {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 12px;
+    .section-title svg {
+      width: 18px; height: 18px; stroke: var(--accent); fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
 
-    .platform-tag {
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      text-align: center;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      transition: transform 0.15s, border-color 0.15s;
+      border-radius: var(--radius);
+      padding: 18px;
+      transition: border-color 0.2s, transform 0.15s;
     }
 
-    .platform-tag:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent);
+    .card:hover { border-color: #3a3a5a; transform: translateY(-1px); }
+
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
     }
 
-    .guide-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+    .card-name { font-weight: 600; font-size: 0.95rem; }
+
+    .badge {
+      font-size: 0.7rem; font-weight: 600; padding: 3px 8px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.3px;
     }
 
-    @media (max-width: 600px) {
-      .guide-grid {
-        grid-template-columns: 1fr;
-      }
+    .badge-ok { background: rgba(74,222,128,0.15); color: var(--success); }
+    .badge-missing { background: rgba(248,113,113,0.15); color: var(--danger); }
+    .badge-unknown { background: rgba(160,160,184,0.12); color: var(--text-muted); }
+
+    .card-stats {
+      display: flex; gap: 16px; margin-top: 8px;
     }
 
-    .guide-item {
+    .stat { display: flex; flex-direction: column; }
+    .stat-value { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+    .stat-label { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
+
+    .card-actions { margin-top: 12px; display: flex; gap: 8px; }
+
+    .btn {
+      font-size: 0.8rem; font-weight: 600; padding: 7px 14px; border-radius: 8px;
+      border: none; cursor: pointer; transition: background 0.15s, opacity 0.15s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+
+    .btn-secondary { background: var(--bg-hover); color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-secondary:hover:not(:disabled) { background: #2e2e50; color: var(--text-primary); }
+
+    .btn-sm { padding: 5px 10px; font-size: 0.75rem; }
+
+    .history-list {
       background: var(--bg-card);
-      border-radius: 8px;
-      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
     }
 
-    .guide-item h3 {
-      font-size: 0.95rem;
-      margin-bottom: 8px;
-      color: var(--accent);
+    .history-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 18px; border-bottom: 1px solid var(--border);
     }
 
-    .guide-item ol {
-      padding-left: 18px;
-      color: var(--text-secondary);
-      font-size: 0.85rem;
+    .history-item:last-child { border-bottom: none; }
+
+    .history-info { display: flex; flex-direction: column; gap: 2px; }
+    .history-platform { font-weight: 600; font-size: 0.9rem; }
+    .history-meta { font-size: 0.75rem; color: var(--text-muted); }
+    .history-count { font-weight: 700; color: var(--success); font-size: 0.85rem; }
+
+    .empty-state {
+      text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.9rem;
     }
 
-    .guide-item li {
-      margin-bottom: 6px;
+    .settings-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 10px;
     }
 
-    .status-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+    .settings-label { font-weight: 500; font-size: 0.9rem; }
+    .settings-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+    .toggle {
+      appearance: none; width: 42px; height: 24px; background: var(--bg-hover);
+      border-radius: 12px; position: relative; cursor: pointer; border: 1px solid var(--border);
+      transition: background 0.2s;
     }
 
-    @media (max-width: 600px) {
-      .status-grid {
-        grid-template-columns: 1fr;
-      }
+    .toggle::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 18px; height: 18px; background: var(--text-secondary);
+      border-radius: 50%; transition: transform 0.2s, background 0.2s;
     }
 
-    .status-item {
-      background: var(--bg-card);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
+    .toggle:checked { background: var(--accent); border-color: var(--accent); }
+    .toggle:checked::after { transform: translateX(18px); background: #fff; }
+
+    .status-bar {
+      display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
     }
 
-    .status-item .label {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
+    .status-pill {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 8px 16px; font-size: 0.82rem; display: flex; align-items: center; gap: 8px;
     }
 
-    .status-item .value {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-primary);
+    .status-pill .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-green { background: var(--success); }
+    .dot-red { background: var(--danger); }
+    .dot-gray { background: var(--text-muted); }
+
+    .toast {
+      position: fixed; bottom: 20px; right: 20px;
+      padding: 12px 18px; border-radius: 10px; font-size: 0.85rem; font-weight: 500;
+      color: #fff; box-shadow: var(--shadow); z-index: 1000;
+      animation: slideUp 0.3s ease-out; max-width: 320px;
     }
 
-    .status-item .value.success {
-      color: var(--success);
+    .toast-success { background: var(--success); }
+    .toast-error { background: var(--danger); }
+    .toast-info { background: var(--info); }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
-    footer {
-      text-align: center;
-      margin-top: 32px;
-      color: var(--text-secondary);
-      font-size: 0.8rem;
+    .loading-overlay {
+      position: fixed; inset: 0; background: rgba(10,10,10,0.7);
+      display: flex; align-items: center; justify-content: center; z-index: 999;
     }
+
+    .loading-overlay.hidden { display: none; }
+
+    .spinner {
+      width: 36px; height: 36px; border: 3px solid var(--border);
+      border-top-color: var(--accent); border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -190,101 +231,381 @@
     <header>
       <h1>
         <svg class="cookie-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2h-2zm0 4h2v6h-2zm4-4h2v2h-2zm0 4h2v6h-2zM7 7h2v2H7zm0 4h2v6H7z"/>
-          <circle cx="8.5" cy="8.5" r="1.5"/>
-          <circle cx="15.5" cy="8.5" r="1.5"/>
-          <circle cx="12" cy="15" r="1.5"/>
+          <circle cx="12" cy="12" r="10"/>
+          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+          <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/>
+          <circle cx="12" cy="15" r="1.5" fill="currentColor"/>
+          <circle cx="9" cy="12" r="1.2" fill="currentColor"/>
+          <circle cx="15" cy="13" r="1.2" fill="currentColor"/>
         </svg>
         Cookie Scout
       </h1>
       <p>Browser extension companion for capturing video site cookies</p>
     </header>
 
-    <section class="card">
-      <h2>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-        Supported Platforms
-      </h2>
-      <div class="platforms">
-        <div class="platform-tag">YouTube</div>
-        <div class="platform-tag">Bilibili</div>
-        <div class="platform-tag">Instagram</div>
-        <div class="platform-tag">Twitter</div>
-        <div class="platform-tag">TikTok</div>
-        <div class="platform-tag">Reddit</div>
-        <div class="platform-tag">Twitch</div>
-        <div class="platform-tag">Vimeo</div>
-        <div class="platform-tag">SoundCloud</div>
-        <div class="platform-tag">Pinterest</div>
-        <div class="platform-tag">Udemy</div>
-        <div class="platform-tag">Bluesky</div>
-      </div>
-    </section>
+    <div class="status-bar" id="status-bar"></div>
 
-    <section class="card">
-      <h2>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-        Cookie Export Guide
-      </h2>
-      <div class="guide-grid">
-        <div class="guide-item">
-          <h3>Chrome Installation</h3>
-          <ol>
-            <li>Download the Cookie Scout extension from the Chrome Web Store.</li>
-            <li>Click "Add to Chrome" and confirm the installation.</li>
-            <li>Pin the extension for easy access.</li>
-            <li>Click the icon and connect to OmniBox.</li>
-          </ol>
-        </div>
-        <div class="guide-item">
-          <h3>Firefox Installation</h3>
-          <ol>
-            <li>Download the Cookie Scout extension from Firefox Add-ons.</li>
-            <li>Click "Add to Firefox" and grant permissions.</li>
-            <li>Pin the extension to your toolbar.</li>
-            <li>Click the icon and connect to OmniBox.</li>
-          </ol>
-        </div>
+    <div class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+        Platform Cookies
       </div>
-    </section>
-
-    <section class="card">
-      <h2>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        Current Status
-      </h2>
-      <div class="status-grid">
-        <div class="status-item">
-          <div class="label">Last Export</div>
-          <div class="value" id="last-export">2025-05-11 12:00:00 UTC</div>
-        </div>
-        <div class="status-item">
-          <div class="label">Cookie Count</div>
-          <div class="value success" id="cookie-count">42</div>
-        </div>
+      <div class="grid-3" id="platform-grid">
+        <div class="empty-state">Loading platforms...</div>
       </div>
-    </section>
+    </div>
 
-    <footer>
-      Cookie Scout v0.1.0 &middot; OmniBox Plugin
-    </footer>
+    <div class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        Export History
+      </div>
+      <div id="history-container">
+        <div class="empty-state">Loading history...</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84a.484.484 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.488.488 0 0 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.27.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        Settings
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="settings-label">Auto-export cookies</div>
+          <div class="settings-desc">Automatically export cookies when visiting video sites</div>
+        </div>
+        <input type="checkbox" class="toggle" id="auto-export-toggle" />
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-overlay hidden" id="loading-overlay">
+    <div class="spinner"></div>
   </div>
 
   <script>
-    (async () => {
-      try {
-        if (window.__OMNIBOX_PLUGIN_API__) {
-          const res = await window.__OMNIBOX_PLUGIN_API__.invoke('get_cookie_status', {});
-          if (res && res.last_export) {
-            document.getElementById('last-export').textContent = res.last_export;
-          }
-          if (res && typeof res.cookie_count === 'number') {
-            document.getElementById('cookie-count').textContent = res.cookie_count;
+    (function () {
+      "use strict";
+
+      // Platform definitions
+      const PLATFORMS = [
+        { id: "youtube", name: "YouTube", domains: [".youtube.com", ".google.com"] },
+        { id: "bilibili", name: "Bilibili", domains: [".bilibili.com", ".bilivideo.com"] },
+        { id: "instagram", name: "Instagram", domains: [".instagram.com", ".cdninstagram.com"] },
+        { id: "twitter", name: "Twitter/X", domains: [".twitter.com", ".x.com"] },
+        { id: "tiktok", name: "TikTok", domains: [".tiktok.com", ".tiktokcdn.com"] },
+        { id: "reddit", name: "Reddit", domains: [".reddit.com"] },
+        { id: "twitch", name: "Twitch", domains: [".twitch.tv"] },
+        { id: "vimeo", name: "Vimeo", domains: [".vimeo.com"] },
+        { id: "soundcloud", name: "SoundCloud", domains: [".soundcloud.com"] },
+        { id: "pinterest", name: "Pinterest", domains: [".pinterest.com"] },
+        { id: "udemy", name: "Udemy", domains: [".udemy.com"] },
+        { id: "bluesky", name: "Bluesky", domains: [".bsky.app"] },
+      ];
+
+      // PostMessage-based API bridge
+      function createInvokeBridge(prefix) {
+        return function (command, args = {}) {
+          return new Promise((resolve, reject) => {
+            const id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+            const handler = (e) => {
+              if (e.source !== parent) return;
+              const d = e.data;
+              if (d && d.type === prefix + "-response" && d.id === id) {
+                window.removeEventListener("message", handler);
+                if (d.error) reject(new Error(d.error));
+                else resolve(d.result);
+              }
+            };
+            window.addEventListener("message", handler);
+            parent.postMessage({ type: prefix + "-invoke", id, command, args }, "*");
+          });
+        };
+      }
+
+      const pluginInvoke = createInvokeBridge("plugin");
+      const systemInvoke = createInvokeBridge("system");
+
+      // Toast helper
+      function showToast(message, type = "info") {
+        parent.postMessage({ type: "show-toast", toastType: type, message }, "*");
+      }
+
+      // UI helpers
+      const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => document.querySelectorAll(sel);
+
+      function setLoading(show) {
+        $("#loading-overlay").classList.toggle("hidden", !show);
+      }
+
+      function escapeHtml(str) {
+        const d = document.createElement("div");
+        d.textContent = str;
+        return d.innerHTML;
+      }
+
+      function formatDate(iso) {
+        if (!iso) return "Never";
+        try {
+          const d = new Date(iso);
+          return d.toLocaleString();
+        } catch {
+          return iso;
+        }
+      }
+
+      function timeAgo(iso) {
+        if (!iso) return "Never";
+        try {
+          const d = new Date(iso);
+          const secs = Math.floor((Date.now() - d.getTime()) / 1000);
+          if (secs < 60) return secs + "s ago";
+          if (secs < 3600) return Math.floor(secs / 60) + "m ago";
+          if (secs < 86400) return Math.floor(secs / 3600) + "h ago";
+          return Math.floor(secs / 86400) + "d ago";
+        } catch {
+          return iso;
+        }
+      }
+
+      // Core data
+      let cookieStatus = null;
+      let pluginStatus = null;
+      let history = [];
+      let settings = {};
+
+      async function loadCookieStatus() {
+        try {
+          cookieStatus = await systemInvoke("extension_cookies_status", {});
+        } catch (e) {
+          console.warn("extension_cookies_status failed:", e);
+          cookieStatus = { file_exists: false, total_cookies: 0, domains: [], age_seconds: null };
+        }
+      }
+
+      async function loadPluginStatus() {
+        try {
+          pluginStatus = await pluginInvoke("get_cookie_status", {});
+          settings = pluginStatus.settings || {};
+        } catch (e) {
+          console.warn("get_cookie_status failed:", e);
+          pluginStatus = { platforms: [] };
+        }
+      }
+
+      async function loadHistory() {
+        try {
+          const res = await pluginInvoke("get_export_history", {});
+          history = res.history || [];
+        } catch (e) {
+          console.warn("get_export_history failed:", e);
+          history = [];
+        }
+      }
+
+      function renderStatusBar() {
+        const bar = $("#status-bar");
+        if (!cookieStatus) {
+          bar.innerHTML = `<div class="status-pill"><span class="dot dot-gray"></span> Loading...</div>`;
+          return;
+        }
+        const hasFile = cookieStatus.file_exists;
+        const age = cookieStatus.age_seconds != null
+          ? cookieStatus.age_seconds < 60
+            ? cookieStatus.age_seconds + "s ago"
+            : cookieStatus.age_seconds < 3600
+            ? Math.floor(cookieStatus.age_seconds / 60) + "m ago"
+            : cookieStatus.age_seconds < 86400
+            ? Math.floor(cookieStatus.age_seconds / 3600) + "h ago"
+            : Math.floor(cookieStatus.age_seconds / 86400) + "d ago"
+          : "unknown";
+
+        bar.innerHTML = `
+          <div class="status-pill">
+            <span class="dot ${hasFile ? "dot-green" : "dot-red"}"></span>
+            ${hasFile ? "Cookie file ready" : "No cookie file"}
+          </div>
+          ${hasFile ? `
+          <div class="status-pill">${cookieStatus.total_cookies} cookies</div>
+          <div class="status-pill">${cookieStatus.domains?.length || 0} domains</div>
+          <div class="status-pill">${age}</div>
+          ` : ""}
+        `;
+      }
+
+      function countCookiesForPlatform(platform) {
+        if (!cookieStatus || !cookieStatus.file_exists || !cookieStatus.domains) return 0;
+        const domainSet = new Set(cookieStatus.domains.map(d => d.toLowerCase()));
+        let count = 0;
+        for (const d of platform.domains) {
+          const root = d.replace(/^\./, "").toLowerCase();
+          for (const cd of domainSet) {
+            if (cd === root || cd.endsWith("." + root)) {
+              count++;
+            }
           }
         }
-      } catch (e) {
-        console.log('Plugin API not available, showing mock data');
+        return count;
       }
+
+      function renderPlatforms() {
+        const grid = $("#platform-grid");
+        if (!cookieStatus) {
+          grid.innerHTML = `<div class="empty-state">Loading platforms...</div>`;
+          return;
+        }
+
+        grid.innerHTML = PLATFORMS.map(p => {
+          const hasFile = cookieStatus.file_exists;
+          const cookieCount = countCookiesForPlatform(p);
+          const hasCookies = hasFile && cookieCount > 0;
+
+          return `
+            <div class="card" data-platform="${escapeHtml(p.id)}">
+              <div class="card-header">
+                <span class="card-name">${escapeHtml(p.name)}</span>
+                <span class="badge ${hasCookies ? "badge-ok" : hasFile ? "badge-missing" : "badge-unknown"}">
+                  ${hasCookies ? "Active" : hasFile ? "No cookies" : "No file"}
+                </span>
+              </div>
+              <div class="card-stats">
+                <div class="stat">
+                  <span class="stat-value">${hasFile ? cookieCount : "—"}</span>
+                  <span class="stat-label">Cookies</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-value">${p.domains.length}</span>
+                  <span class="stat-label">Domains</span>
+                </div>
+              </div>
+              <div class="card-actions">
+                <button class="btn btn-primary btn-sm" onclick="requestExport('${escapeHtml(p.id)}')"
+                  ${!hasFile ? "disabled" : ""} title="Request cookie export">
+                  Export
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="readPlatformCookies('${escapeHtml(p.id)}')"
+                  ${!hasCookies ? "disabled" : ""} title="Read platform cookies">
+                  Read
+                </button>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderHistory() {
+        const container = $("#history-container");
+        if (!history.length) {
+          container.innerHTML = `
+            <div class="history-list">
+              <div class="empty-state">No export history yet.<br>Use the browser extension floating button on video sites to export cookies.</div>
+            </div>
+          `;
+          return;
+        }
+
+        const items = history.slice().reverse().slice(0, 50).map(h => `
+          <div class="history-item">
+            <div class="history-info">
+              <span class="history-platform">${escapeHtml(h.platform)}</span>
+              <span class="history-meta">${escapeHtml(h.source)} &middot; ${formatDate(h.timestamp)}</span>
+            </div>
+            <span class="history-count">${h.cookie_count} cookies</span>
+          </div>
+        `).join("");
+
+        container.innerHTML = `
+          <div class="history-list">
+            ${items}
+          </div>
+          <div style="text-align:center;margin-top:12px;">
+            <button class="btn btn-secondary btn-sm" onclick="clearHistory()">Clear History</button>
+          </div>
+        `;
+      }
+
+      function renderSettings() {
+        const toggle = $("#auto-export-toggle");
+        const autoExport = settings.auto_export !== false; // default true
+        toggle.checked = autoExport;
+        toggle.onchange = async (e) => {
+          try {
+            settings.auto_export = e.target.checked;
+            await pluginInvoke("save_settings", { auto_export: e.target.checked });
+            showToast("Settings saved", "success");
+          } catch (err) {
+            showToast("Failed to save settings: " + err.message, "error");
+          }
+        };
+      }
+
+      // Global handlers attached to window for inline onclick
+      window.requestExport = async function (platform) {
+        setLoading(true);
+        try {
+          const res = await pluginInvoke("trigger_cookie_export", { platform });
+          showToast(res.message || "Export requested", "info");
+          await loadHistory();
+          renderHistory();
+        } catch (err) {
+          showToast("Export failed: " + err.message, "error");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      window.readPlatformCookies = async function (platform) {
+        setLoading(true);
+        try {
+          const p = PLATFORMS.find(x => x.id === platform);
+          const domain = p ? p.domains[0].replace(/^\./, "") : platform;
+          const res = await systemInvoke("read_extension_cookies", { domain });
+          if (res && res.cookies) {
+            showToast(`${res.cookies.length} cookies for ${p?.name || platform}`, "success");
+          } else {
+            showToast("No cookies found for " + (p?.name || platform), "info");
+          }
+        } catch (err) {
+          showToast("Read failed: " + err.message, "error");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      window.clearHistory = async function () {
+        setLoading(true);
+        try {
+          await pluginInvoke("clear_history", {});
+          history = [];
+          renderHistory();
+          showToast("History cleared", "success");
+        } catch (err) {
+          showToast("Failed to clear history: " + err.message, "error");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      // Initialization
+      async function init() {
+        setLoading(true);
+        try {
+          await Promise.all([loadCookieStatus(), loadPluginStatus(), loadHistory()]);
+          renderStatusBar();
+          renderPlatforms();
+          renderHistory();
+          renderSettings();
+        } catch (e) {
+          console.error("Initialization failed:", e);
+          showToast("Failed to initialize Cookie Scout", "error");
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      init();
     })();
   </script>
 </body>

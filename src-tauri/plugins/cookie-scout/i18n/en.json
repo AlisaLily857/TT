@@ -1,13 +1,55 @@
 {
-  "cookie_scout": {
-    "title": "Cookie Scout",
-    "description": "Capture cookies from video sites",
-    "export_guide": "Export Guide",
-    "platforms": "Supported Platforms",
-    "status": "Status",
-    "last_export": "Last Export",
-    "cookie_count": "Cookie Count",
-    "chrome_install": "Chrome Installation",
-    "firefox_install": "Firefox Installation"
+  "plugin": {
+    "name": "Cookie Scout",
+    "description": "Browser extension companion for capturing video site cookies and sending them to OmniBox"
+  },
+  "platforms": {
+    "title": "Platform Cookies",
+    "youtube": "YouTube",
+    "bilibili": "Bilibili",
+    "instagram": "Instagram",
+    "twitter": "Twitter/X",
+    "tiktok": "TikTok",
+    "reddit": "Reddit",
+    "twitch": "Twitch",
+    "vimeo": "Vimeo",
+    "soundcloud": "SoundCloud",
+    "pinterest": "Pinterest",
+    "udemy": "Udemy",
+    "bluesky": "Bluesky"
+  },
+  "status": {
+    "cookie_file_ready": "Cookie file ready",
+    "no_cookie_file": "No cookie file",
+    "cookies_count": "{count} cookies",
+    "domains_count": "{count} domains",
+    "active": "Active",
+    "no_cookies": "No cookies",
+    "unknown": "Unknown"
+  },
+  "history": {
+    "title": "Export History",
+    "empty": "No export history yet. Use the browser extension floating button on video sites to export cookies.",
+    "clear": "Clear History",
+    "cookies": "{count} cookies"
+  },
+  "settings": {
+    "title": "Settings",
+    "auto_export": "Auto-export cookies",
+    "auto_export_desc": "Automatically export cookies when visiting video sites"
+  },
+  "actions": {
+    "export": "Export",
+    "read": "Read",
+    "settings_saved": "Settings saved",
+    "history_cleared": "History cleared",
+    "export_requested": "Use the browser extension floating button to export cookies"
+  },
+  "loading": "Loading...",
+  "error": {
+    "init_failed": "Failed to initialize Cookie Scout",
+    "settings_save_failed": "Failed to save settings",
+    "history_clear_failed": "Failed to clear history",
+    "export_failed": "Export failed"
   }
 }
