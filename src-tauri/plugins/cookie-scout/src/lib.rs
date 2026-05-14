@@ -46,14 +46,11 @@ impl CookieScoutPlugin {
         Self { host: None }
     }
 
-    fn host(&self) -> Result<&Arc<dyn PluginHost>, String> {
-        self.host
-            .as_ref()
-            .ok_or_else(|| "Plugin not initialized".to_string())
-    }
-
     fn data_dir(&self) -> Result<PathBuf, String> {
-        let host = self.host()?;
+        let host = self
+            .host
+            .as_ref()
+            .ok_or_else(|| "Plugin not initialized".to_string())?;
         Ok(host.plugin_data_dir("cookie-scout"))
     }
 
@@ -94,7 +91,7 @@ impl CookieScoutPlugin {
             "pinterest" => "Pinterest",
             "udemy" => "Udemy",
             "bluesky" => "Bluesky",
-            _ => id,
+            _ => "Unknown",
         }
     }
 }
@@ -130,45 +127,41 @@ impl OmnigetPlugin for CookieScoutPlugin {
     ) -> std::pin::Pin<
         Box<dyn std::future::Future<Output = Result<serde_json::Value, String>> + Send + 'static>,
     > {
+        let host_opt = self.host.clone();
+
         match command.as_str() {
-            "get_cookie_status" => {
-                let host = match self.host.clone() {
-                    Some(h) => h,
-                    None => {
-                        return Box::pin(async move {
-                            Err("Plugin not initialized".to_string())
+            "get_cookie_status" => Box::pin(async move {
+                let host = host_opt.ok_or("Plugin not initialized")?;
+                let settings = host.get_settings("cookie-scout");
+                let platforms: Vec<serde_json::Value> = SUPPORTED_PLATFORMS
+                    .iter()
+                    .map(|(id, domains)| {
+                        json!({
+                            "id": id,
+                            "name": CookieScoutPlugin::platform_name(id),
+                            "domains": domains,
                         })
-                    }
-                };
+                    })
+                    .collect();
+                Ok(json!({
+                    "platforms": platforms,
+                    "settings": settings,
+                    "version": "0.1.0",
+                    "plugin_id": "cookie-scout",
+                }))
+            }),
+
+            "get_export_history" => {
+                let state_result = self.load_state();
                 Box::pin(async move {
-                    let settings = host.get_settings("cookie-scout");
-                    let platforms: Vec<serde_json::Value> = SUPPORTED_PLATFORMS
-                        .iter()
-                        .map(|(id, domains)| {
-                            json!({
-                                "id": id,
-                                "name": CookieScoutPlugin::platform_name(id),
-                                "domains": domains,
-                            })
-                        })
-                        .collect();
+                    let state = state_result?;
                     Ok(json!({
-                        "platforms": platforms,
-                        "settings": settings,
-                        "version": "0.1.0",
-                        "plugin_id": "cookie-scout",
+                        "history": state.export_history,
+                        "total_exports": state.total_exports,
+                        "last_export_platform": state.last_export_platform,
                     }))
                 })
             }
-
-            "get_export_history" => Box::pin(async move {
-                let state = self.load_state()?;
-                Ok(json!({
-                    "history": state.export_history,
-                    "total_exports": state.total_exports,
-                    "last_export_platform": state.last_export_platform,
-                }))
-            }),
 
             "record_export" => {
                 let platform = args
@@ -186,28 +179,33 @@ impl OmnigetPlugin for CookieScoutPlugin {
                     .unwrap_or("plugin")
                     .to_string();
 
+                let mut state = match self.load_state() {
+                    Ok(s) => s,
+                    Err(e) => return Box::pin(async move { Err(format!("Failed to load state: {}", e)) }),
+                };
+                let record = ExportRecord {
+                    platform: platform.clone(),
+                    cookie_count,
+                    timestamp: Utc::now().to_rfc3339(),
+                    source,
+                };
+                state.export_history.push(record);
+                if state.export_history.len() > 100 {
+                    state.export_history.remove(0);
+                }
+                state.total_exports += 1;
+                state.last_export_platform = Some(platform);
+
+                if let Err(e) = self.save_state(&state) {
+                    return Box::pin(async move { Err(format!("Failed to save state: {}", e)) });
+                }
+
+                let host_opt2 = host_opt.clone();
                 Box::pin(async move {
-                    let mut state = self.load_state().unwrap_or_default();
-                    let record = ExportRecord {
-                        platform: platform.clone(),
-                        cookie_count,
-                        timestamp: Utc::now().to_rfc3339(),
-                        source,
-                    };
-                    state.export_history.push(record);
-                    if state.export_history.len() > 100 {
-                        state.export_history.remove(0);
-                    }
-                    state.total_exports += 1;
-                    state.last_export_platform = Some(platform);
-
-                    if let Err(e) = self.save_state(&state) {
-                        return Err(format!("Failed to save state: {}", e));
-                    }
-
-                    if let Ok(host) = self.host() {
-                        let platform_name =
-                            CookieScoutPlugin::platform_name(&state.last_export_platform.as_deref().unwrap_or(""));
+                    if let Some(host) = host_opt2 {
+                        let platform_name = CookieScoutPlugin::platform_name(
+                            state.last_export_platform.as_deref().unwrap_or(""),
+                        );
                         let _ = host.emit_event(
                             "cookie-scout:export",
                             json!({
@@ -220,29 +218,35 @@ impl OmnigetPlugin for CookieScoutPlugin {
                             &format!("Cookies exported for {}", platform_name),
                         );
                     }
-
                     Ok(json!({ "success": true }))
                 })
             }
 
-            "clear_history" => Box::pin(async move {
-                let mut state = self.load_state().unwrap_or_default();
+            "clear_history" => {
+                let mut state = match self.load_state() {
+                    Ok(s) => s,
+                    Err(e) => return Box::pin(async move { Err(format!("Failed to load state: {}", e)) }),
+                };
                 let cleared_count = state.export_history.len();
                 state.export_history.clear();
                 state.total_exports = 0;
                 state.last_export_platform = None;
-                self.save_state(&state)?;
-                Ok(json!({ "success": true, "cleared_count": cleared_count }))
-            }),
+                if let Err(e) = self.save_state(&state) {
+                    return Box::pin(async move { Err(format!("Failed to save state: {}", e)) });
+                }
+                Box::pin(async move {
+                    Ok(json!({ "success": true, "cleared_count": cleared_count }))
+                })
+            }
 
             "get_settings" => Box::pin(async move {
-                let host = self.host()?;
+                let host = host_opt.ok_or("Plugin not initialized")?;
                 let settings = host.get_settings("cookie-scout");
                 Ok(settings)
             }),
 
             "save_settings" => Box::pin(async move {
-                let host = self.host()?;
+                let host = host_opt.ok_or("Plugin not initialized")?;
                 host.save_settings("cookie-scout", args)
                     .map_err(|e| e.to_string())?;
                 Ok(json!({ "success": true }))
@@ -255,23 +259,29 @@ impl OmnigetPlugin for CookieScoutPlugin {
                     .unwrap_or("unknown")
                     .to_string();
 
-                Box::pin(async move {
-                    let mut state = self.load_state().unwrap_or_default();
-                    let record = ExportRecord {
-                        platform: platform.clone(),
-                        cookie_count: 0,
-                        timestamp: Utc::now().to_rfc3339(),
-                        source: "plugin_manual".to_string(),
-                    };
-                    state.export_history.push(record);
-                    if state.export_history.len() > 100 {
-                        state.export_history.remove(0);
-                    }
-                    state.total_exports += 1;
-                    state.last_export_platform = Some(platform.clone());
-                    self.save_state(&state)?;
+                let mut state = match self.load_state() {
+                    Ok(s) => s,
+                    Err(e) => return Box::pin(async move { Err(format!("Failed to load state: {}", e)) }),
+                };
+                let record = ExportRecord {
+                    platform: platform.clone(),
+                    cookie_count: 0,
+                    timestamp: Utc::now().to_rfc3339(),
+                    source: "plugin_manual".to_string(),
+                };
+                state.export_history.push(record);
+                if state.export_history.len() > 100 {
+                    state.export_history.remove(0);
+                }
+                state.total_exports += 1;
+                state.last_export_platform = Some(platform.clone());
+                if let Err(e) = self.save_state(&state) {
+                    return Box::pin(async move { Err(format!("Failed to save state: {}", e)) });
+                }
 
-                    if let Ok(host) = self.host() {
+                let host_opt2 = host_opt.clone();
+                Box::pin(async move {
+                    if let Some(host) = host_opt2 {
                         let _ = host.emit_event(
                             "cookie-scout:export_requested",
                             json!({ "platform": platform }),
@@ -284,7 +294,6 @@ impl OmnigetPlugin for CookieScoutPlugin {
                             ),
                         );
                     }
-
                     Ok(json!({
                         "success": true,
                         "message": "Use the browser extension floating button to export cookies",

@@ -471,6 +471,7 @@ export type TranslationKeys =
   | 'settings.appearance.lang_ja'
   | 'settings.appearance.lang_pt'
   | 'settings.appearance.lang_zh'
+  | 'settings.appearance.lang_zh-TW'
   | 'settings.appearance.language'
   | 'settings.appearance.more_themes'
   | 'settings.appearance.theme'

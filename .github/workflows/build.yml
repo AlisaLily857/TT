@@ -54,6 +54,13 @@ jobs:
       - name: Install frontend dependencies
         run: pnpm install
 
+      - name: Pre-check cargo (macOS)
+        if: matrix.platform == 'macos-latest'
+        run: |
+          which cargo
+          cargo --version
+          cd src-tauri && cargo metadata --no-deps --format-version 1 > /dev/null && echo "cargo metadata OK" || echo "cargo metadata FAILED"
+
       - name: Build Tauri (PR)
         if: github.event_name == 'pull_request'
         uses: tauri-apps/tauri-action@v0
