@@ -107,5 +107,27 @@
       },
       "description": "Send current page to OmniBox"
     }
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.bilibili.com/*",
+        "*://*.instagram.com/*",
+        "*://*.twitter.com/*",
+        "*://*.x.com/*",
+        "*://*.tiktok.com/*",
+        "*://*.reddit.com/*",
+        "*://*.twitch.tv/*",
+        "*://*.vimeo.com/*",
+        "*://*.soundcloud.com/*",
+        "*://*.pinterest.com/*",
+        "*://*.udemy.com/*",
+        "*://*.bsky.app/*"
+      ],
+      "js": ["src/cookie-scout.js"],
+      "css": ["src/cookie-scout.css"],
+      "run_at": "document_idle"
+    }
+  ]
 }

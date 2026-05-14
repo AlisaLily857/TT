@@ -1,7 +1,8 @@
 import { loadOpenAppState, isOpenAppEnabled, setOpenAppEnabled } from "../src/open-app-toggle.js";
 import { getHlsGroupKey } from "../src/hls-grouping.js";
 import { normalizePageKey } from "../src/sniffer-storage.js";
-import { formatCookieSummary } from "../src/cookie-summary.js";
+import { summarizeCookies, formatCookieSummary } from "../src/cookie-summary.js";
+import { extractCookiesForPlatform } from "../src/cookies.js";
 
 const APP_URL = "https://github.com/AlisaLily857/OmniBox/releases/latest";
 
@@ -17,6 +18,7 @@ const SVG = {
 let currentData = null;
 let pageTitle = "";
 let pageThumbnail = "";
+let renderGeneration = 0;
 
 async function init() {
   const toggle = document.getElementById("sniffer-toggle");
@@ -78,6 +80,7 @@ function determineState(data) {
 }
 
 function render() {
+  renderGeneration++;
   const state = determineState(currentData);
   const content = document.getElementById("content");
   document.querySelector(".popup").classList.toggle("dimmed", state === "sniffer_off");
@@ -102,6 +105,8 @@ function renderKnownPlatform(container) {
   appendPrimaryButton(container, label, meta, (btn) => {
     handleDownload(btn, tabUrl, pageDetected.platform);
   });
+
+  appendCookieCard(container, pageDetected.platform);
 }
 
 function renderMediaDetected(container) {
@@ -318,6 +323,71 @@ async function handleBatchDownload(btn, groups) {
   } else {
     showError(btn.closest(".secondary-action") || btn.parentElement);
   }
+}
+
+async function appendCookieCard(container, platform) {
+  const gen = renderGeneration;
+
+  let summaryText = "No cookies detected";
+  try {
+    const cookies = await extractCookiesForPlatform(platform);
+    const summary = summarizeCookies(cookies);
+    summaryText = formatCookieSummary(summary) || "No cookies detected";
+  } catch {
+    summaryText = "Unable to read cookies";
+  }
+
+  if (gen !== renderGeneration) return;
+
+  const card = document.createElement("div");
+  card.className = "cookie-card";
+  card.innerHTML = `
+    <div class="cookie-card-info">
+      <span class="cookie-card-title">\u5f53\u524d\u7ad9\u70b9 Cookie</span>
+      <span class="cookie-card-summary">${escapeHtml(summaryText)}</span>
+    </div>
+    <button class="cookie-export-btn secondary-btn" aria-label="Export cookies now">
+      <span class="btn-icon">${SVG.download}</span>
+      <span class="btn-label">\u7acb\u5373\u5bfc\u51fa Cookie</span>
+    </button>
+  `;
+
+  const btn = card.querySelector(".cookie-export-btn");
+  btn.addEventListener("click", async () => {
+    if (btn.dataset.busy) return;
+    btn.dataset.busy = "1";
+    btn.classList.add("sending");
+    btn.querySelector(".btn-label").textContent = "Exporting...";
+
+    const result = await exportCookies(platform);
+
+    if (result.ok) {
+      btn.classList.remove("sending");
+      btn.classList.add("success");
+      btn.querySelector(".btn-icon").innerHTML = SVG.check;
+      btn.querySelector(".btn-label").textContent = "\u5bfc\u51fa\u6210\u529f";
+      setTimeout(() => window.close(), 1200);
+    } else {
+      btn.classList.remove("sending");
+      btn.classList.add("export-error");
+      btn.querySelector(".btn-label").textContent = "\u5bfc\u51fa\u5931\u8d25";
+      delete btn.dataset.busy;
+      setTimeout(() => {
+        btn.classList.remove("export-error");
+        btn.querySelector(".btn-label").textContent = "\u7acb\u5373\u5bfc\u51fa Cookie";
+      }, 2000);
+    }
+  });
+
+  container.appendChild(card);
+}
+
+function exportCookies(platform) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "cookies:manual-export", platform }, (response) => {
+      resolve({ ok: response?.ok ?? false });
+    });
+  });
 }
 
 function showError(container) {

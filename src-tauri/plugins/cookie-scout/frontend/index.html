@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cookie Scout</title>
+  <style>
+    :root {
+      --bg-primary: #1a1a2e;
+      --bg-secondary: #16213e;
+      --bg-card: #0f3460;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0b0;
+      --accent: #e94560;
+      --accent-hover: #c73550;
+      --border: #2a2a4a;
+      --success: #4caf50;
+      --radius: 12px;
+      --shadow: 0 4px 16px rgba(0,0,0,0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .cookie-icon {
+      width: 36px;
+      height: 36px;
+      fill: var(--accent);
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .platforms {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+    }
+
+    .platform-tag {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .platform-tag:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .guide-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .guide-item {
+      background: var(--bg-card);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .guide-item h3 {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .guide-item ol {
+      padding-left: 18px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .guide-item li {
+      margin-bottom: 6px;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .status-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .status-item {
+      background: var(--bg-card);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .status-item .label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .status-item .value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .status-item .value.success {
+      color: var(--success);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 32px;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>
+        <svg class="cookie-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2h-2zm0 4h2v6h-2zm4-4h2v2h-2zm0 4h2v6h-2zM7 7h2v2H7zm0 4h2v6H7z"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <circle cx="15.5" cy="8.5" r="1.5"/>
+          <circle cx="12" cy="15" r="1.5"/>
+        </svg>
+        Cookie Scout
+      </h1>
+      <p>Browser extension companion for capturing video site cookies</p>
+    </header>
+
+    <section class="card">
+      <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+        Supported Platforms
+      </h2>
+      <div class="platforms">
+        <div class="platform-tag">YouTube</div>
+        <div class="platform-tag">Bilibili</div>
+        <div class="platform-tag">Instagram</div>
+        <div class="platform-tag">Twitter</div>
+        <div class="platform-tag">TikTok</div>
+        <div class="platform-tag">Reddit</div>
+        <div class="platform-tag">Twitch</div>
+        <div class="platform-tag">Vimeo</div>
+        <div class="platform-tag">SoundCloud</div>
+        <div class="platform-tag">Pinterest</div>
+        <div class="platform-tag">Udemy</div>
+        <div class="platform-tag">Bluesky</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        Cookie Export Guide
+      </h2>
+      <div class="guide-grid">
+        <div class="guide-item">
+          <h3>Chrome Installation</h3>
+          <ol>
+            <li>Download the Cookie Scout extension from the Chrome Web Store.</li>
+            <li>Click "Add to Chrome" and confirm the installation.</li>
+            <li>Pin the extension for easy access.</li>
+            <li>Click the icon and connect to OmniBox.</li>
+          </ol>
+        </div>
+        <div class="guide-item">
+          <h3>Firefox Installation</h3>
+          <ol>
+            <li>Download the Cookie Scout extension from Firefox Add-ons.</li>
+            <li>Click "Add to Firefox" and grant permissions.</li>
+            <li>Pin the extension to your toolbar.</li>
+            <li>Click the icon and connect to OmniBox.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        Current Status
+      </h2>
+      <div class="status-grid">
+        <div class="status-item">
+          <div class="label">Last Export</div>
+          <div class="value" id="last-export">2025-05-11 12:00:00 UTC</div>
+        </div>
+        <div class="status-item">
+          <div class="label">Cookie Count</div>
+          <div class="value success" id="cookie-count">42</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Cookie Scout v0.1.0 &middot; OmniBox Plugin
+    </footer>
+  </div>
+
+  <script>
+    (async () => {
+      try {
+        if (window.__OMNIBOX_PLUGIN_API__) {
+          const res = await window.__OMNIBOX_PLUGIN_API__.invoke('get_cookie_status', {});
+          if (res && res.last_export) {
+            document.getElementById('last-export').textContent = res.last_export;
+          }
+          if (res && typeof res.cookie_count === 'number') {
+            document.getElementById('cookie-count').textContent = res.cookie_count;
+          }
+        }
+      } catch (e) {
+        console.log('Plugin API not available, showing mock data');
+      }
+    })();
+  </script>
+</body>
+</html>

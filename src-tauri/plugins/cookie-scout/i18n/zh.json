@@ -1,0 +1,13 @@
+{
+  "cookie_scout": {
+    "title": "Cookie Scout",
+    "description": "捕获视频网站的 Cookie",
+    "export_guide": "导出指南",
+    "platforms": "支持的平台",
+    "status": "状态",
+    "last_export": "最后导出时间",
+    "cookie_count": "Cookie 数量",
+    "chrome_install": "Chrome 安装",
+    "firefox_install": "Firefox 安装"
+  }
+}

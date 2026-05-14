@@ -327,3 +327,38 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: #444; }
 
 .hidden { display: none; }
+
+.cookie-card {
+  margin: 0 12px 12px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.15s ease;
+}
+
+.cookie-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cookie-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cookie-card-summary {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.cookie-export-btn.secondary-btn.export-error {
+  background: var(--error);
+  border-color: var(--error);
+  color: white;
+}

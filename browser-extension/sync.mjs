@@ -15,6 +15,8 @@ const SHARED = [
   "src/background.js",
   "src/blocked-hosts.js",
   "src/context-menu.js",
+  "src/cookie-scout.css",
+  "src/cookie-scout.js",
   "src/cookie-summary.js",
   "src/cookies.js",
   "src/cookies-domains.json",

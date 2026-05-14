@@ -1,0 +1,13 @@
+{
+  "cookie_scout": {
+    "title": "Cookie Scout",
+    "description": "Capture cookies from video sites",
+    "export_guide": "Export Guide",
+    "platforms": "Supported Platforms",
+    "status": "Status",
+    "last_export": "Last Export",
+    "cookie_count": "Cookie Count",
+    "chrome_install": "Chrome Installation",
+    "firefox_install": "Firefox Installation"
+  }
+}

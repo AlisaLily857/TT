@@ -170,6 +170,11 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     handleSendToApp(msg).then(sendResponse);
     return true;
   }
+
+  if (msg.type === "cookies:manual-export") {
+    handleManualCookieExport(msg.platform).then(sendResponse);
+    return true;
+  }
 });
 
 function onMediaDetected(tabId, _entry) {
@@ -470,6 +475,50 @@ async function capturePlatformCookies(platform, force = false) {
     return { ok: true, count: cookies.length, response };
   } catch (e) {
     console.warn("[OmniBox] cookie export failed", platform, e.message);
+    return { ok: false, reason: "host_unreachable", error: e.message };
+  }
+}
+
+const MANUAL_EXPORT_DEBOUNCE_MS = 10_000;
+const manualExportLastSent = new Map();
+
+async function handleManualCookieExport(platform) {
+  const lastSent = manualExportLastSent.get(platform) || 0;
+  if (Date.now() - lastSent < MANUAL_EXPORT_DEBOUNCE_MS) {
+    console.debug("[OmniBox] manual cookie export debounced", platform);
+    return { ok: false, reason: "debounced" };
+  }
+  manualExportLastSent.set(platform, Date.now());
+
+  let cookies = null;
+  try {
+    cookies = await extractCookiesForPlatform(platform);
+  } catch (e) {
+    console.warn("[OmniBox] manual cookie extract failed", platform, e);
+    return { ok: false, reason: "extract_failed", error: e.message };
+  }
+  if (!cookies || cookies.length === 0) {
+    console.debug("[OmniBox] no cookies for manual export", platform);
+    return { ok: false, reason: "no_cookies" };
+  }
+
+  try {
+    const response = await sendNativeMessage({
+      type: "cookies:export",
+      protocolVersion: PROTOCOL_VERSION,
+      platform,
+      cookies,
+      timestamp: Date.now(),
+    });
+    console.info(
+      "[OmniBox] manual cookies exported",
+      platform,
+      cookies.length,
+      response,
+    );
+    return { ok: true, count: cookies.length, response };
+  } catch (e) {
+    console.warn("[OmniBox] manual cookie export failed", platform, e.message);
     return { ok: false, reason: "host_unreachable", error: e.message };
   }
 }

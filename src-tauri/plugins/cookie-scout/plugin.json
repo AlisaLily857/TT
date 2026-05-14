@@ -1,0 +1,38 @@
+{
+  "id": "cookie-scout",
+  "name": "Cookie Scout",
+  "version": "0.1.0",
+  "description": "Browser extension companion for capturing video site cookies and sending them to OmniBox",
+  "author": "AlisaLily857",
+  "min_omniget_version": "0.6.0",
+  "license": "MIT",
+  "homepage": "https://github.com/AlisaLily857/omnibox-cookie-scout",
+  "icon": "cookie-scout.png",
+  "nav": [
+    {
+      "route": "/cookie-scout",
+      "label": {
+        "en": "Cookie Scout",
+        "zh": "Cookie Scout"
+      },
+      "icon_svg": "cookie",
+      "group": "secondary",
+      "order": 10
+    }
+  ],
+  "events": {
+    "progress": ["progress"],
+    "complete": ["complete"]
+  },
+  "capabilities": ["core:events", "core:toast", "core:settings"],
+  "settings_schema": {
+    "type": "object",
+    "properties": {
+      "auto_export": {
+        "type": "boolean",
+        "default": true,
+        "description": "Auto-export cookies when visiting video sites"
+      }
+    }
+  }
+}
