@@ -52,8 +52,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf xdg-utils
 
-      - name: Install frontend dependencies
-
       - name: Debug cargo (macOS x86_64)
         if: matrix.platform == 'macos-latest' && contains(matrix.args, 'x86_64')
         run: |
@@ -71,6 +69,8 @@ jobs:
           cd src-tauri && cargo metadata --no-deps --format-version 1 || echo "cargo metadata failed"
           echo "=== rustc --version ==="
           rustc --version || echo "rustc --version failed"
+
+      - name: Install frontend dependencies
         run: pnpm install
 
       - name: Build Tauri (PR)
