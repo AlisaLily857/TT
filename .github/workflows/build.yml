@@ -48,10 +48,13 @@ jobs:
       - name: Ensure rustup healthy (macOS)
         if: matrix.platform == 'macos-latest'
         run: |
-          if ! cargo --version &>/dev/null; then
+          # rustup-init also accepts --version, so cargo --version may succeed even if cargo is actually rustup-init.
+          # Check that the output starts with "cargo " to be sure.
+          if ! cargo --version 2>/dev/null | grep -q "^cargo "; then
             echo "Rustup/cargo broken — force reinstalling..."
             rm -rf ~/.cargo/bin ~/.rustup
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+            source "$HOME/.cargo/env"
           fi
 
       - name: Install dependencies (Ubuntu only)
