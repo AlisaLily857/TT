@@ -45,6 +45,15 @@ jobs:
         with:
           workspaces: './src-tauri -> target'
 
+      - name: Ensure rustup healthy (macOS)
+        if: matrix.platform == 'macos-latest'
+        run: |
+          if ! cargo --version &>/dev/null; then
+            echo "Rustup/cargo broken — reinstalling..."
+            rm -f ~/.cargo/bin/rustup ~/.cargo/bin/cargo ~/.cargo/bin/rustc
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+          fi
+
       - name: Install dependencies (Ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
         run: |
