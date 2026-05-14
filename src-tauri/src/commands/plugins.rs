@@ -394,7 +394,10 @@ pub async fn install_plugin_from_registry(
     install_plugin_zip_from_repo(&state.inner().clone(), plugin_id, repo).await
 }
 
-const DEFAULT_PLUGINS: &[(&str, &str)] = &[("study", "AlisaLily857/omnibox-study-release")];
+const DEFAULT_PLUGINS: &[(&str, &str)] = &[
+    ("study", "AlisaLily857/omnibox-study-release"),
+    ("cookie-scout", "AlisaLily857/omnibox-cookie-scout"),
+];
 
 pub async fn ensure_default_plugins(state: Arc<tokio::sync::RwLock<PluginManager>>) {
     for (plugin_id, repo) in DEFAULT_PLUGINS {
