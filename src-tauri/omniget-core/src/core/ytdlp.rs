@@ -378,6 +378,15 @@ pub async fn find_ytdlp() -> Option<PathBuf> {
     // lacks this plugin, causing "Requested format is not available".
     let managed = managed_ytdlp_path()?;
     if managed.exists() {
+        #[cfg(target_os = "windows")]
+        {
+            if let Some(wrapper) = managed_ytdlp_wrapper_path() {
+                if wrapper.exists() {
+                    tracing::debug!("[perf] find_ytdlp took {:?}", _timer_start.elapsed());
+                    return Some(wrapper);
+                }
+            }
+        }
         tracing::debug!("[perf] find_ytdlp took {:?}", _timer_start.elapsed());
         return Some(managed);
     }
@@ -473,6 +482,39 @@ fn managed_ytdlp_path() -> Option<PathBuf> {
     Some(data.join("bin").join(bin_name))
 }
 
+fn managed_ytdlp_wrapper_path() -> Option<PathBuf> {
+    #[cfg(target_os = "windows")]
+    {
+        let data = crate::core::paths::app_data_dir()?;
+        Some(data.join("bin").join("yt-dlp.bat"))
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        managed_ytdlp_path()
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn ensure_ytdlp_wrapper() {
+    let Some(exe) = managed_ytdlp_path() else { return };
+    if !exe.exists() {
+        return;
+    }
+    let Some(wrapper) = managed_ytdlp_wrapper_path() else { return };
+    if wrapper.exists() {
+        return;
+    }
+    let wrapper_content = "@echo off\nchcp 65001 >nul\n\"%~dp0yt-dlp.exe\" %*\n";
+    if let Some(parent) = wrapper.parent() {
+        let _ = std::fs::create_dir_all(parent);
+    }
+    if let Err(e) = std::fs::write(&wrapper, wrapper_content) {
+        tracing::warn!("[ytdlp] failed to create wrapper script: {}", e);
+    } else {
+        tracing::info!("[ytdlp] created wrapper script: {}", wrapper.display());
+    }
+}
+
 pub async fn ensure_ytdlp() -> anyhow::Result<PathBuf> {
     let _timer_start = std::time::Instant::now();
 
@@ -498,6 +540,14 @@ pub async fn ensure_ytdlp() -> anyhow::Result<PathBuf> {
                         })
                         .ok();
                     tracing::debug!("[perf] ensure_ytdlp took {:?}", _timer_start.elapsed());
+                    #[cfg(target_os = "windows")]
+                    {
+                        if let Some(wrapper) = managed_ytdlp_wrapper_path() {
+                            if wrapper.exists() {
+                                return Ok(wrapper);
+                            }
+                        }
+                    }
                     return Ok(path);
                 }
                 Err(e) => {
@@ -511,7 +561,10 @@ pub async fn ensure_ytdlp() -> anyhow::Result<PathBuf> {
     }
 
     if let Some(path) = find_ytdlp_cached().await {
-        let path_clone = path.clone();
+        #[cfg(target_os = "windows")]
+        ensure_ytdlp_wrapper();
+        let freshness_path = managed_ytdlp_path().unwrap_or_else(|| path.clone());
+        let freshness_path_clone = freshness_path.clone();
         std::thread::Builder::new()
             .name("ytdlp-freshness".into())
             .spawn(move || {
@@ -520,7 +573,7 @@ pub async fn ensure_ytdlp() -> anyhow::Result<PathBuf> {
                     .build()
                     .expect("freshness runtime");
                 rt.block_on(async move {
-                    check_ytdlp_freshness(&path_clone).await;
+                    check_ytdlp_freshness(&freshness_path_clone).await;
                 });
             })
             .ok();
@@ -560,6 +613,14 @@ pub async fn ensure_ytdlp() -> anyhow::Result<PathBuf> {
         })
         .ok();
     tracing::debug!("[perf] ensure_ytdlp took {:?}", _timer_start.elapsed());
+    #[cfg(target_os = "windows")]
+    {
+        if let Some(wrapper) = managed_ytdlp_wrapper_path() {
+            if wrapper.exists() {
+                return Ok(wrapper);
+            }
+        }
+    }
     Ok(path)
 }
 
@@ -619,19 +680,30 @@ async fn download_ytdlp_binary() -> anyhow::Result<PathBuf> {
         .await;
     }
 
+    #[cfg(target_os = "windows")]
+    {
+        if let Some(wrapper) = managed_ytdlp_wrapper_path() {
+            let wrapper_content = "@echo off\nchcp 65001 >nul\n\"%~dp0yt-dlp.exe\" %*\n";
+            let _ = tokio::task::spawn_blocking(move || {
+                if let Some(parent) = wrapper.parent() {
+                    let _ = std::fs::create_dir_all(parent);
+                }
+                std::fs::write(&wrapper, wrapper_content)
+            })
+            .await;
+        }
+    }
+
     Ok(target)
 }
 
-async fn check_ytdlp_freshness(path: &Path) {
-    if let Some(managed) = managed_ytdlp_path() {
-        if path != managed.as_path() {
-            return;
-        }
-    } else {
-        return;
-    }
+async fn check_ytdlp_freshness(_path: &Path) {
+    let managed = match managed_ytdlp_path() {
+        Some(p) => p,
+        None => return,
+    };
 
-    if let Ok(meta) = std::fs::metadata(path) {
+    if let Ok(meta) = std::fs::metadata(&managed) {
         if let Ok(modified) = meta.modified() {
             if let Ok(age) = modified.elapsed() {
                 if age > std::time::Duration::from_secs(2 * 24 * 60 * 60) {
