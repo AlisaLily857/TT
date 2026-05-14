@@ -764,11 +764,17 @@ impl PlatformDownloader for TwitterDownloader {
             );
             let output = opts.output_dir.join(&filename);
 
-            let bytes = direct_downloader::download_direct(
+            let mut headers = reqwest::header::HeaderMap::new();
+            headers.insert(
+                reqwest::header::REFERER,
+                reqwest::header::HeaderValue::from_static("https://x.com/"),
+            );
+            let bytes = direct_downloader::download_direct_with_headers(
                 &self.client,
                 &quality.url,
                 &output,
                 progress,
+                Some(headers),
                 Some(&opts.cancel_token),
             )
             .await?;
@@ -794,11 +800,17 @@ impl PlatformDownloader for TwitterDownloader {
             let output = opts.output_dir.join(&filename);
             let (tx, _rx) = mpsc::channel(8);
 
-            let bytes = direct_downloader::download_direct(
+            let mut headers = reqwest::header::HeaderMap::new();
+            headers.insert(
+                reqwest::header::REFERER,
+                reqwest::header::HeaderValue::from_static("https://x.com/"),
+            );
+            let bytes = direct_downloader::download_direct_with_headers(
                 &self.client,
                 &quality.url,
                 &output,
                 tx,
+                Some(headers),
                 Some(&opts.cancel_token),
             )
             .await?;

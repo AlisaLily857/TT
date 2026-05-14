@@ -66,9 +66,7 @@ impl PlatformDownloader for BilibiliDownloader {
     }
 
     async fn get_media_info(&self, url: &str) -> anyhow::Result<MediaInfo> {
-        let ytdlp_path = ytdlp::find_ytdlp_cached()
-            .await
-            .ok_or_else(|| anyhow!("yt-dlp not found"))?;
+        let ytdlp_path = ytdlp::ensure_ytdlp().await?;
 
         let extra = Self::bilibili_extra_flags();
 
@@ -205,9 +203,7 @@ impl PlatformDownloader for BilibiliDownloader {
 
         let ytdlp_path = match &opts.ytdlp_path {
             Some(p) => p.clone(),
-            None => ytdlp::find_ytdlp_cached()
-                .await
-                .ok_or_else(|| anyhow!("yt-dlp not found"))?,
+            None => ytdlp::ensure_ytdlp().await?,
         };
 
         let url = info

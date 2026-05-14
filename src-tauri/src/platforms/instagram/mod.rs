@@ -472,7 +472,11 @@ impl InstagramDownloader {
 
     async fn fallback_ytdlp(&self, url: &str, post_id: &str) -> anyhow::Result<MediaInfo> {
         let ytdlp_path = crate::core::ytdlp::ensure_ytdlp().await?;
-        let json = crate::core::ytdlp::get_video_info(&ytdlp_path, url, &[]).await?;
+        let extra = vec![
+            "--referer".to_string(),
+            "https://www.instagram.com/".to_string(),
+        ];
+        let json = crate::core::ytdlp::get_video_info(&ytdlp_path, url, &extra).await?;
         let mut info =
             crate::platforms::generic_ytdlp::GenericYtdlpDownloader::parse_video_info(&json)?;
 

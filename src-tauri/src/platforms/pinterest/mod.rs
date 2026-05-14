@@ -154,30 +154,52 @@ impl PlatformDownloader for PinterestDownloader {
             if let Some(host) = parsed.host_str() {
                 let host = host.to_lowercase();
                 return host == "pin.it"
-                    || host.contains("pinterest.com")
-                    || host.contains("pinterest.ca")
-                    || host.contains("pinterest.co.uk")
-                    || host.contains("pinterest.fr")
-                    || host.contains("pinterest.de")
-                    || host.contains("pinterest.es")
-                    || host.contains("pinterest.it")
-                    || host.contains("pinterest.pt")
-                    || host.contains("pinterest.jp")
-                    || host.contains("pinterest.kr")
-                    || host.contains("pinterest.com.br")
-                    || host.contains("pinterest.com.mx")
-                    || host.contains("pinterest.co.kr")
-                    || host.contains("pinterest.cl")
-                    || host.contains("pinterest.at")
-                    || host.contains("pinterest.ch")
-                    || host.contains("pinterest.com.au")
-                    || host.contains("pinterest.co.in")
-                    || host.contains("pinterest.nz")
-                    || host.contains("pinterest.ph")
-                    || host.contains("pinterest.ru")
-                    || host.contains("pinterest.se")
-                    || host.contains("pinterest.dk")
-                    || host.contains("pinterest.");
+                    || host.ends_with(".pinterest.com")
+                    || host == "pinterest.com"
+                    || host.ends_with(".pinterest.ca")
+                    || host == "pinterest.ca"
+                    || host.ends_with(".pinterest.co.uk")
+                    || host == "pinterest.co.uk"
+                    || host.ends_with(".pinterest.fr")
+                    || host == "pinterest.fr"
+                    || host.ends_with(".pinterest.de")
+                    || host == "pinterest.de"
+                    || host.ends_with(".pinterest.es")
+                    || host == "pinterest.es"
+                    || host.ends_with(".pinterest.it")
+                    || host == "pinterest.it"
+                    || host.ends_with(".pinterest.pt")
+                    || host == "pinterest.pt"
+                    || host.ends_with(".pinterest.jp")
+                    || host == "pinterest.jp"
+                    || host.ends_with(".pinterest.kr")
+                    || host == "pinterest.kr"
+                    || host.ends_with(".pinterest.com.br")
+                    || host == "pinterest.com.br"
+                    || host.ends_with(".pinterest.com.mx")
+                    || host == "pinterest.com.mx"
+                    || host.ends_with(".pinterest.co.kr")
+                    || host == "pinterest.co.kr"
+                    || host.ends_with(".pinterest.cl")
+                    || host == "pinterest.cl"
+                    || host.ends_with(".pinterest.at")
+                    || host == "pinterest.at"
+                    || host.ends_with(".pinterest.ch")
+                    || host == "pinterest.ch"
+                    || host.ends_with(".pinterest.com.au")
+                    || host == "pinterest.com.au"
+                    || host.ends_with(".pinterest.co.in")
+                    || host == "pinterest.co.in"
+                    || host.ends_with(".pinterest.nz")
+                    || host == "pinterest.nz"
+                    || host.ends_with(".pinterest.ph")
+                    || host == "pinterest.ph"
+                    || host.ends_with(".pinterest.ru")
+                    || host == "pinterest.ru"
+                    || host.ends_with(".pinterest.se")
+                    || host == "pinterest.se"
+                    || host.ends_with(".pinterest.dk")
+                    || host == "pinterest.dk";
             }
         }
         false

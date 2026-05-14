@@ -194,6 +194,16 @@ fn extract_media(embed: &serde_json::Value) -> Option<BlueskyMedia> {
                 let hls_url = playlist.replace("video.bsky.app/watch/", "video.cdn.bsky.app/hls/");
                 return Some(BlueskyMedia::Video { hls_url });
             }
+            if media_type == "app.bsky.embed.images#view" {
+                let images = media.get("images")?.as_array()?;
+                let urls: Vec<String> = images
+                    .iter()
+                    .filter_map(|img| img.get("fullsize")?.as_str().map(String::from))
+                    .collect();
+                if !urls.is_empty() {
+                    return Some(BlueskyMedia::Images(urls));
+                }
+            }
             None
         }
         _ => None,

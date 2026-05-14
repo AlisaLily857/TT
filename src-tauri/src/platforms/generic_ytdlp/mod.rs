@@ -531,6 +531,21 @@ fn platform_referer(url: &str) -> Option<&'static str> {
     if lower.contains("bilibili.com") || lower.contains("bilibili.tv") {
         return Some("https://www.bilibili.com/");
     }
+    if lower.contains("facebook.com") || lower.contains("fb.watch") {
+        return Some("https://www.facebook.com/");
+    }
+    if lower.contains("dailymotion.com") || lower.contains("dai.ly") {
+        return Some("https://www.dailymotion.com/");
+    }
+    if lower.contains("soundcloud.com") {
+        return Some("https://soundcloud.com/");
+    }
+    if lower.contains("nicovideo.jp") || lower.contains("niconico.jp") {
+        return Some("https://www.nicovideo.jp/");
+    }
+    if lower.contains("bandcamp.com") {
+        return Some("https://bandcamp.com/");
+    }
 
     None
 }
