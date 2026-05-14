@@ -201,7 +201,7 @@ fn extract_media(embed: &serde_json::Value) -> Option<BlueskyMedia> {
                     .filter_map(|img| img.get("fullsize")?.as_str().map(String::from))
                     .collect();
                 if !urls.is_empty() {
-                    return Some(BlueskyMedia::Images(urls));
+                    return Some(BlueskyMedia::Images { urls });
                 }
             }
             None
