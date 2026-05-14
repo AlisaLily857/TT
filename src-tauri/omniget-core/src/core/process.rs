@@ -44,6 +44,55 @@ pub fn command<S: AsRef<std::ffi::OsStr>>(program: S) -> tokio::process::Command
     cmd
 }
 
+pub fn ytdlp_command(ytdlp: &std::path::Path) -> tokio::process::Command {
+    #[cfg(target_os = "windows")]
+    {
+        let mut cmd = tokio::process::Command::new("cmd");
+        cmd.creation_flags(0x08000000);
+        cmd.arg("/c");
+        cmd.arg("chcp").arg("65001").arg(">").arg("nul").arg("&&");
+        cmd.arg(ytdlp);
+        if let Some(path) = enhanced_path() {
+            cmd.env("PATH", path);
+        }
+        cmd.env_remove("PYTHONHOME");
+        cmd.env_remove("PYTHONPATH");
+        cmd.env("PYTHONIOENCODING", "utf-8");
+        cmd.env("PYTHONUTF8", "1");
+        cmd.env("PYTHONLEGACYWINDOWSSTDIO", "0");
+        cmd
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        command(ytdlp)
+    }
+}
+
+pub fn ytdlp_std_command(ytdlp: &std::path::Path) -> std::process::Command {
+    #[cfg(target_os = "windows")]
+    {
+        let mut cmd = std::process::Command::new("cmd");
+        use std::os::windows::process::CommandExt;
+        cmd.creation_flags(0x08000000);
+        cmd.arg("/c");
+        cmd.arg("chcp").arg("65001").arg(">").arg("nul").arg("&&");
+        cmd.arg(ytdlp);
+        if let Some(path) = enhanced_path() {
+            cmd.env("PATH", path);
+        }
+        cmd.env_remove("PYTHONHOME");
+        cmd.env_remove("PYTHONPATH");
+        cmd.env("PYTHONIOENCODING", "utf-8");
+        cmd.env("PYTHONUTF8", "1");
+        cmd.env("PYTHONLEGACYWINDOWSSTDIO", "0");
+        cmd
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        std_command(ytdlp)
+    }
+}
+
 pub fn std_command<S: AsRef<std::ffi::OsStr>>(program: S) -> std::process::Command {
     let mut cmd = std::process::Command::new(program);
     #[cfg(target_os = "windows")]

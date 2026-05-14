@@ -143,7 +143,7 @@ pub fn check_ffmpeg() -> bool {
 }
 
 pub fn check_ytdlp() -> bool {
-    crate::core::process::std_command("yt-dlp")
+    crate::core::process::ytdlp_std_command(std::path::Path::new("yt-dlp"))
         .arg("--version")
         .stdout(std::process::Stdio::null())
         .stderr(std::process::Stdio::null())

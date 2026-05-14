@@ -278,7 +278,7 @@ pub async fn check_ytdlp_update(ytdlp: &Path) -> anyhow::Result<bool> {
 
     let ytdlp = ytdlp.to_path_buf();
     let output = tokio::task::spawn_blocking(move || {
-        crate::core::process::std_command(&ytdlp)
+        crate::core::process::ytdlp_std_command(&ytdlp)
             .args(["--update-to", "nightly"])
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -378,15 +378,6 @@ pub async fn find_ytdlp() -> Option<PathBuf> {
     // lacks this plugin, causing "Requested format is not available".
     let managed = managed_ytdlp_path()?;
     if managed.exists() {
-        #[cfg(target_os = "windows")]
-        {
-            if let Some(wrapper) = managed_ytdlp_wrapper_path() {
-                if wrapper.exists() {
-                    tracing::debug!("[perf] find_ytdlp took {:?}", _timer_start.elapsed());
-                    return Some(wrapper);
-                }
-            }
-        }
         tracing::debug!("[perf] find_ytdlp took {:?}", _timer_start.elapsed());
         return Some(managed);
     }
@@ -395,7 +386,7 @@ pub async fn find_ytdlp() -> Option<PathBuf> {
     // check (`path.exists()`) works — a bare "yt-dlp" would always fail.
     let bin_name_owned = bin_name.to_string();
     let found = tokio::task::spawn_blocking(move || {
-        crate::core::process::std_command(&bin_name_owned)
+        crate::core::process::ytdlp_std_command(std::path::Path::new(&bin_name_owned))
             .arg("--version")
             .stdout(Stdio::null())
             .stderr(Stdio::null())
@@ -482,38 +473,6 @@ fn managed_ytdlp_path() -> Option<PathBuf> {
     Some(data.join("bin").join(bin_name))
 }
 
-fn managed_ytdlp_wrapper_path() -> Option<PathBuf> {
-    #[cfg(target_os = "windows")]
-    {
-        let data = crate::core::paths::app_data_dir()?;
-        Some(data.join("bin").join("yt-dlp.bat"))
-    }
-    #[cfg(not(target_os = "windows"))]
-    {
-        managed_ytdlp_path()
-    }
-}
-
-#[cfg(target_os = "windows")]
-fn ensure_ytdlp_wrapper() {
-    let Some(exe) = managed_ytdlp_path() else { return };
-    if !exe.exists() {
-        return;
-    }
-    let Some(wrapper) = managed_ytdlp_wrapper_path() else { return };
-    if wrapper.exists() {
-        return;
-    }
-    let wrapper_content = "@echo off\nchcp 65001 >nul\n\"%~dp0yt-dlp.exe\" %*\n";
-    if let Some(parent) = wrapper.parent() {
-        let _ = std::fs::create_dir_all(parent);
-    }
-    if let Err(e) = std::fs::write(&wrapper, wrapper_content) {
-        tracing::warn!("[ytdlp] failed to create wrapper script: {}", e);
-    } else {
-        tracing::info!("[ytdlp] created wrapper script: {}", wrapper.display());
-    }
-}
 
 pub async fn ensure_ytdlp() -> anyhow::Result<PathBuf> {
     let _timer_start = std::time::Instant::now();
@@ -540,14 +499,6 @@ pub async fn ensure_ytdlp() -> anyhow::Result<PathBuf> {
                         })
                         .ok();
                     tracing::debug!("[perf] ensure_ytdlp took {:?}", _timer_start.elapsed());
-                    #[cfg(target_os = "windows")]
-                    {
-                        if let Some(wrapper) = managed_ytdlp_wrapper_path() {
-                            if wrapper.exists() {
-                                return Ok(wrapper);
-                            }
-                        }
-                    }
                     return Ok(path);
                 }
                 Err(e) => {
@@ -561,8 +512,6 @@ pub async fn ensure_ytdlp() -> anyhow::Result<PathBuf> {
     }
 
     if let Some(path) = find_ytdlp_cached().await {
-        #[cfg(target_os = "windows")]
-        ensure_ytdlp_wrapper();
         let freshness_path = managed_ytdlp_path().unwrap_or_else(|| path.clone());
         let freshness_path_clone = freshness_path.clone();
         std::thread::Builder::new()
@@ -613,14 +562,6 @@ pub async fn ensure_ytdlp() -> anyhow::Result<PathBuf> {
         })
         .ok();
     tracing::debug!("[perf] ensure_ytdlp took {:?}", _timer_start.elapsed());
-    #[cfg(target_os = "windows")]
-    {
-        if let Some(wrapper) = managed_ytdlp_wrapper_path() {
-            if wrapper.exists() {
-                return Ok(wrapper);
-            }
-        }
-    }
     Ok(path)
 }
 
@@ -680,28 +621,18 @@ async fn download_ytdlp_binary() -> anyhow::Result<PathBuf> {
         .await;
     }
 
-    #[cfg(target_os = "windows")]
-    {
-        if let Some(wrapper) = managed_ytdlp_wrapper_path() {
-            let wrapper_content = "@echo off\nchcp 65001 >nul\n\"%~dp0yt-dlp.exe\" %*\n";
-            let _ = tokio::task::spawn_blocking(move || {
-                if let Some(parent) = wrapper.parent() {
-                    let _ = std::fs::create_dir_all(parent);
-                }
-                std::fs::write(&wrapper, wrapper_content)
-            })
-            .await;
-        }
-    }
-
     Ok(target)
 }
 
-async fn check_ytdlp_freshness(_path: &Path) {
+async fn check_ytdlp_freshness(path: &Path) {
     let managed = match managed_ytdlp_path() {
         Some(p) => p,
         None => return,
     };
+
+    if path != managed.as_path() {
+        return;
+    }
 
     if let Ok(meta) = std::fs::metadata(&managed) {
         if let Ok(modified) = meta.modified() {
@@ -1007,7 +938,7 @@ pub async fn get_video_info(
         args.extend(extra_flags.iter().cloned());
         args.push(url.to_string());
 
-        let child = crate::core::process::command(ytdlp)
+        let child = crate::core::process::ytdlp_command(ytdlp)
             .args(&args)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -1128,7 +1059,7 @@ pub async fn get_playlist_info(
 
     let output = tokio::time::timeout(
         std::time::Duration::from_secs(120),
-        crate::core::process::command(ytdlp)
+        crate::core::process::ytdlp_command(ytdlp)
             .args(&args)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -1578,7 +1509,7 @@ pub async fn download_video(
         args.extend(extra_args.iter().cloned());
         args.push(url.to_string());
 
-        let mut child = crate::core::process::command(ytdlp)
+        let mut child = crate::core::process::ytdlp_command(ytdlp)
             .args(&args)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())

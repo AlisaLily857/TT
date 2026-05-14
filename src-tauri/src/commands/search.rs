@@ -31,7 +31,7 @@ pub async fn search_videos(
         _ => format!("ytsearch{}:{}", n, query),
     };
 
-    let output = crate::core::process::command(&ytdlp_path)
+    let output = crate::core::process::ytdlp_command(std::path::Path::new(&ytdlp_path))
         .args([
             "--flat-playlist",
             "--dump-json",
