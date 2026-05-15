@@ -243,8 +243,9 @@ async fn poll_for_cookie(
 async fn extract_cookies(
     window: &tauri::WebviewWindow,
     default_domain: &str,
-    _domains: &[String],
+    domains: &[String],
 ) -> Vec<AuthCookie> {
+    let _ = domains;
     #[cfg(windows)]
     {
         let native = extract_cookies_native(window, domains).await;
