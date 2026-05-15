@@ -262,14 +262,8 @@ fn find_native_lib(dir: &Path, rust_crate: Option<&str>) -> Option<PathBuf> {
         }
     }
 
-    for entry in fs::read_dir(dir).ok()? {
-        let path = entry.ok()?.path();
-        if let Some(ext) = path.extension() {
-            if extensions.contains(&ext.to_str().unwrap_or("")) {
-                return Some(path);
-            }
-        }
-    }
+    // Do NOT fallback to loading arbitrary shared libraries in the directory.
+    // This prevents accidental or malicious loading of unintended libraries.
     None
 }
 

@@ -164,8 +164,11 @@ pub fn parse_cookie_input(input: &str, target_cookie: &str) -> ParsedInput {
                         cookie_obj.get("name").and_then(|n| n.as_str()),
                         cookie_obj.get("value").and_then(|v| v.as_str()),
                     ) {
-                        cookies.insert(name.to_string(), value.to_string());
-                        parts.push(format!("{}={}", name, value));
+                        // Reject names/values that would inject extra cookie pairs
+                        let safe_name = name.replace(';', "%3B").replace('=', "%3D");
+                        let safe_value = value.replace(';', "%3B");
+                        cookies.insert(safe_name.clone(), safe_value.clone());
+                        parts.push(format!("{}={}", safe_name, safe_value));
                     }
                 }
 

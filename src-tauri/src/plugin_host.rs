@@ -33,6 +33,22 @@ impl<R: Runtime + 'static> PluginHost for PluginHostImpl<R> {
             .map_err(|e| anyhow::anyhow!("Failed to show toast: {}", e))
     }
 
+    fn validate_plugin_id(plugin_id: &str) -> anyhow::Result<()> {
+        if plugin_id.is_empty() {
+            anyhow::bail!("plugin_id must not be empty");
+        }
+        // Reject path traversal and separators
+        for component in plugin_id.split(|c| c == '/' || c == '\\') {
+            if component == ".." || component == "." {
+                anyhow::bail!("plugin_id must not contain path traversal sequences");
+            }
+        }
+        if plugin_id.contains(':') || plugin_id.contains('\0') {
+            anyhow::bail!("plugin_id must not contain colons or null bytes");
+        }
+        Ok(())
+    }
+
     fn plugin_data_dir(&self, plugin_id: &str) -> PathBuf {
         self.plugins_dir.join(plugin_id).join("data")
     }
@@ -42,6 +58,9 @@ impl<R: Runtime + 'static> PluginHost for PluginHostImpl<R> {
     }
 
     fn get_settings(&self, plugin_id: &str) -> serde_json::Value {
+        if Self::validate_plugin_id(plugin_id).is_err() {
+            return serde_json::Value::Object(Default::default());
+        }
         let settings_path = self
             .plugins_dir
             .join(plugin_id)
@@ -54,6 +73,7 @@ impl<R: Runtime + 'static> PluginHost for PluginHostImpl<R> {
     }
 
     fn save_settings(&self, plugin_id: &str, settings: serde_json::Value) -> anyhow::Result<()> {
+        Self::validate_plugin_id(plugin_id)?;
         let data_dir = self.plugins_dir.join(plugin_id).join("data");
         std::fs::create_dir_all(&data_dir)?;
         let settings_path = data_dir.join("settings.json");
@@ -113,7 +133,18 @@ impl<R: Runtime + 'static> PluginHost for PluginHostImpl<R> {
         if namespace.is_empty() {
             anyhow::bail!("external_data_cache: namespace must not be empty");
         }
-        if plugin_id.contains(['/', '\\', ':', '\0']) || namespace.contains(['/', '\\', ':', '\0'])
+        for component in plugin_id.split(|c| c == '/' || c == '\\') {
+            if component == ".." || component == "." {
+                anyhow::bail!("external_data_cache: plugin_id must not contain path traversal sequences");
+            }
+        }
+        for component in namespace.split(|c| c == '/' || c == '\\') {
+            if component == ".." || component == "." {
+                anyhow::bail!("external_data_cache: namespace must not contain path traversal sequences");
+            }
+        }
+        if plugin_id.contains(':') || plugin_id.contains('\0')
+            || namespace.contains(':') || namespace.contains('\0')
         {
             anyhow::bail!(
                 "external_data_cache: plugin_id/namespace must not contain path separators or null bytes"

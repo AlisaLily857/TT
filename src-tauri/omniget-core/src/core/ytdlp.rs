@@ -603,7 +603,12 @@ async fn download_ytdlp_binary() -> anyhow::Result<PathBuf> {
         managed_ytdlp_path().ok_or_else(|| anyhow!("Could not determine data directory"))?;
 
     if let Some(parent) = target.parent() {
-        std::fs::create_dir_all(parent)?;
+        tokio::task::spawn_blocking({
+            let parent = parent.to_path_buf();
+            move || std::fs::create_dir_all(&parent)
+        })
+        .await
+        .map_err(|e| anyhow!("spawn_blocking failed: {}", e))??;
     }
 
     let download_url = if cfg!(target_os = "windows") {
@@ -1339,7 +1344,12 @@ pub async fn download_video(
 
     let output_template = output_dir.join(&template).to_string_lossy().to_string();
 
-    std::fs::create_dir_all(output_dir)?;
+    tokio::task::spawn_blocking({
+        let output_dir = output_dir.to_path_buf();
+        move || std::fs::create_dir_all(&output_dir)
+    })
+    .await
+    .map_err(|e| anyhow!("spawn_blocking failed: {}", e))??;
 
     let explicit_cookie_header = has_explicit_cookie_header(extra_flags);
     let manual_cookie_header = if explicit_cookie_header || cookie_file.is_some() {

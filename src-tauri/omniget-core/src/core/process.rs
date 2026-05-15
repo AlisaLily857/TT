@@ -1,3 +1,18 @@
+#[cfg(target_os = "windows")]
+extern "system" {
+    fn SetConsoleCP(wCodePageID: u32) -> i32;
+    fn SetConsoleOutputCP(wCodePageID: u32) -> i32;
+}
+
+#[cfg(target_os = "windows")]
+fn set_console_utf8() {
+    const CP_UTF8: u32 = 65001;
+    unsafe {
+        let _ = SetConsoleCP(CP_UTF8);
+        let _ = SetConsoleOutputCP(CP_UTF8);
+    }
+}
+
 fn enhanced_path() -> Option<String> {
     use std::sync::OnceLock;
     static CACHED: OnceLock<Option<String>> = OnceLock::new();
@@ -47,19 +62,9 @@ pub fn command<S: AsRef<std::ffi::OsStr>>(program: S) -> tokio::process::Command
 pub fn ytdlp_command(ytdlp: &std::path::Path) -> tokio::process::Command {
     #[cfg(target_os = "windows")]
     {
-        let mut cmd = tokio::process::Command::new("cmd");
+        set_console_utf8();
+        let mut cmd = command(ytdlp);
         cmd.creation_flags(0x08000000);
-        cmd.arg("/c");
-        cmd.arg("chcp").arg("65001").arg(">").arg("nul").arg("&&");
-        cmd.arg(ytdlp);
-        if let Some(path) = enhanced_path() {
-            cmd.env("PATH", path);
-        }
-        cmd.env_remove("PYTHONHOME");
-        cmd.env_remove("PYTHONPATH");
-        cmd.env("PYTHONIOENCODING", "utf-8");
-        cmd.env("PYTHONUTF8", "1");
-        cmd.env("PYTHONLEGACYWINDOWSSTDIO", "0");
         cmd
     }
     #[cfg(not(target_os = "windows"))]
@@ -71,20 +76,10 @@ pub fn ytdlp_command(ytdlp: &std::path::Path) -> tokio::process::Command {
 pub fn ytdlp_std_command(ytdlp: &std::path::Path) -> std::process::Command {
     #[cfg(target_os = "windows")]
     {
-        let mut cmd = std::process::Command::new("cmd");
+        set_console_utf8();
+        let mut cmd = std_command(ytdlp);
         use std::os::windows::process::CommandExt;
         cmd.creation_flags(0x08000000);
-        cmd.arg("/c");
-        cmd.arg("chcp").arg("65001").arg(">").arg("nul").arg("&&");
-        cmd.arg(ytdlp);
-        if let Some(path) = enhanced_path() {
-            cmd.env("PATH", path);
-        }
-        cmd.env_remove("PYTHONHOME");
-        cmd.env_remove("PYTHONPATH");
-        cmd.env("PYTHONIOENCODING", "utf-8");
-        cmd.env("PYTHONUTF8", "1");
-        cmd.env("PYTHONLEGACYWINDOWSSTDIO", "0");
         cmd
     }
     #[cfg(not(target_os = "windows"))]

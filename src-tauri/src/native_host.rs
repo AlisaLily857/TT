@@ -495,8 +495,9 @@ pub fn extension_cookie_file_path() -> PathBuf {
 }
 
 fn sanitize_cookie_field(s: &str) -> String {
+    // Strip all control characters (0x00-0x1F, 0x7F) except tab which we also remove
     s.chars()
-        .filter(|c| *c != '\n' && *c != '\r' && *c != '\t')
+        .filter(|c| !c.is_control())
         .collect()
 }
 
