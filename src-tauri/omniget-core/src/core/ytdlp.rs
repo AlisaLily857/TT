@@ -2010,7 +2010,11 @@ fn translate_ytdlp_error(stderr: &str) -> anyhow::Error {
         }
     };
 
-    anyhow!("yt-dlp: {}", msg)
+    if msg.is_empty() {
+        anyhow!("yt-dlp exited with an error but produced no output. The binary may be missing a dependency (e.g. VC++ Redistributable on Windows) or was blocked by antivirus.")
+    } else {
+        anyhow!("yt-dlp: {}", msg)
+    }
 }
 
 pub fn get_rate_limit_stats() -> serde_json::Value {

@@ -48,7 +48,16 @@ pub fn classify_download_error(error: &str) -> (&str, &str) {
         );
     }
 
-    if lower.contains("yt-dlp") || lower.contains("ytdlp") || lower.contains("no downloader") {
+    // Only match errors that explicitly say yt-dlp is *missing/unavailable*.
+    // Do NOT match runtime errors like "yt-dlp: extractor is broken" or
+    // "yt-dlp: Connection timed out" — those mean yt-dlp is installed but
+    // failed during execution, so showing "Install it from Settings" is misleading.
+    if lower.contains("no downloader")
+        || lower.contains("yt-dlp not found")
+        || lower.contains("yt-dlp unavailable")
+        || lower.contains("yt-dlp not installed")
+        || lower.contains("could not find yt-dlp")
+    {
         return (
             "ytdlp_needed",
             "yt-dlp is required. Install it from Settings.",
