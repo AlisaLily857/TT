@@ -14,6 +14,24 @@ impl<R: Runtime> PluginHostImpl<R> {
     }
 }
 
+impl<R: Runtime> PluginHostImpl<R> {
+    fn validate_plugin_id(plugin_id: &str) -> anyhow::Result<()> {
+        if plugin_id.is_empty() {
+            anyhow::bail!("plugin_id must not be empty");
+        }
+        // Reject path traversal and separators
+        for component in plugin_id.split(|c| c == '/' || c == '\\') {
+            if component == ".." || component == "." {
+                anyhow::bail!("plugin_id must not contain path traversal sequences");
+            }
+        }
+        if plugin_id.contains(':') || plugin_id.contains('\0') {
+            anyhow::bail!("plugin_id must not contain colons or null bytes");
+        }
+        Ok(())
+    }
+}
+
 impl<R: Runtime + 'static> PluginHost for PluginHostImpl<R> {
     fn emit_event(&self, name: &str, payload: serde_json::Value) -> anyhow::Result<()> {
         self.app
@@ -31,22 +49,6 @@ impl<R: Runtime + 'static> PluginHost for PluginHostImpl<R> {
                 }),
             )
             .map_err(|e| anyhow::anyhow!("Failed to show toast: {}", e))
-    }
-
-    fn validate_plugin_id(plugin_id: &str) -> anyhow::Result<()> {
-        if plugin_id.is_empty() {
-            anyhow::bail!("plugin_id must not be empty");
-        }
-        // Reject path traversal and separators
-        for component in plugin_id.split(|c| c == '/' || c == '\\') {
-            if component == ".." || component == "." {
-                anyhow::bail!("plugin_id must not contain path traversal sequences");
-            }
-        }
-        if plugin_id.contains(':') || plugin_id.contains('\0') {
-            anyhow::bail!("plugin_id must not contain colons or null bytes");
-        }
-        Ok(())
     }
 
     fn plugin_data_dir(&self, plugin_id: &str) -> PathBuf {
