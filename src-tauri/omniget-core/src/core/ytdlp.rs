@@ -299,10 +299,14 @@ pub async fn check_ytdlp_update(ytdlp: &Path) -> anyhow::Result<bool> {
     .await;
 
     let output = match result {
-        Ok(Ok(output)) => output,
-        Ok(Err(e)) => {
+        Ok(Ok(Ok(output))) => output,
+        Ok(Ok(Err(e))) => {
             YTDLP_UPDATE_CHECKED.store(false, Ordering::Relaxed);
             return Err(anyhow!("yt-dlp update check failed: {}", e));
+        }
+        Ok(Err(_)) => {
+            YTDLP_UPDATE_CHECKED.store(false, Ordering::Relaxed);
+            return Err(anyhow!("yt-dlp update check task panicked"));
         }
         Err(_) => {
             YTDLP_UPDATE_CHECKED.store(false, Ordering::Relaxed);
@@ -1001,10 +1005,11 @@ pub async fn get_video_info(
         args.extend(extra_flags.iter().cloned());
         args.push(url.to_string());
 
-        let mut child = crate::core::process::ytdlp_command(ytdlp)
+        let child = crate::core::process::ytdlp_command(ytdlp)
             .args(&args)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
+            .kill_on_drop(true)
             .spawn()
             .map_err(|e| anyhow!("Failed to run yt-dlp: {}", e))?;
         tracing::debug!(
@@ -1025,7 +1030,6 @@ pub async fn get_video_info(
                 return Err(anyhow!("Failed to run yt-dlp: {}", e));
             }
             Err(_) => {
-                let _ = child.kill().await;
                 tracing::debug!("[perf] get_video_info took {:?}", _timer_start.elapsed());
                 return Err(anyhow!("Timeout fetching video info (60s)"));
             }
@@ -1126,10 +1130,11 @@ pub async fn get_playlist_info(
     args.extend(extra_flags.iter().cloned());
     args.push(url.to_string());
 
-    let mut child = crate::core::process::ytdlp_command(ytdlp)
+    let child = crate::core::process::ytdlp_command(ytdlp)
         .args(&args)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
+        .kill_on_drop(true)
         .spawn()
         .map_err(|e| anyhow!("Failed to run yt-dlp: {}", e))?;
 
@@ -1144,7 +1149,6 @@ pub async fn get_playlist_info(
             return Err(anyhow!("Failed to run yt-dlp: {}", e));
         }
         Err(_) => {
-            let _ = child.kill().await;
             return Err(anyhow!("Timeout fetching playlist (120s)"));
         }
     };
@@ -2208,7 +2212,7 @@ async fn find_downloaded_file(output_dir: &Path, url: &str) -> anyhow::Result<Pa
 
         let fallback_limit = std::time::Duration::from_secs(120);
         let mut newest: Option<(PathBuf, std::time::SystemTime)> = None;
-    if let Ok(entries) = std::fs::read_dir(output_dir) {
+    if let Ok(entries) = std::fs::read_dir(&output_dir) {
         for entry in entries.flatten() {
             let path = entry.path();
             if !path.is_file() {
