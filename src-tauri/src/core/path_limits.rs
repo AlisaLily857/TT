@@ -38,3 +38,55 @@ pub fn validate_output_dir(output_dir: &str) -> Result<(), PathLimitError> {
     }
     Ok(())
 }
+
+/// Validates that output_dir does not contain path-traversal sequences
+/// and resolves within an allowed base directory.
+pub fn sanitize_output_dir(output_dir: &str, base_dir: &std::path::Path) -> Result<std::path::PathBuf, String> {
+    use std::path::Path;
+
+    if output_dir.is_empty() {
+        return Err("Output directory cannot be empty".to_string());
+    }
+
+    // Reject path traversal components
+    for component in output_dir.split(|c| c == '/' || c == '\\') {
+        if component == ".." {
+            return Err("Output directory cannot contain '..'".to_string());
+        }
+    }
+
+    // Reject absolute paths
+    if output_dir.starts_with('/') {
+        return Err("Output directory must be relative".to_string());
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        if output_dir.len() >= 2 && output_dir.as_bytes()[1] == b':' {
+            return Err("Output directory cannot be an absolute Windows path".to_string());
+        }
+        if output_dir.starts_with("\\\\") {
+            return Err("Output directory cannot be a UNC path".to_string());
+        }
+    }
+
+    let resolved = base_dir.join(output_dir);
+    let canonical_base = base_dir.canonicalize()
+        .map_err(|e| format!("Failed to canonicalize base dir: {}", e))?;
+    let canonical_resolved = resolved.canonicalize()
+        .or_else(|_| {
+            // Path may not exist yet; canonicalize its parent and append the final component
+            let parent = resolved.parent().unwrap_or(base_dir);
+            let file_name = resolved.file_name()
+                .ok_or_else(|| "Invalid output directory".to_string())?;
+            let canonical_parent = parent.canonicalize()
+                .map_err(|e| format!("Failed to canonicalize parent: {}", e))?;
+            Ok::<_, String>(canonical_parent.join(file_name))
+        })?;
+
+    if !canonical_resolved.starts_with(&canonical_base) {
+        return Err("Output directory escapes the allowed base directory".to_string());
+    }
+
+    Ok(resolved)
+}

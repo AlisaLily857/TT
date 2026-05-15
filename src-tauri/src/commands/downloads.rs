@@ -484,6 +484,27 @@ pub async fn restore_recovery(
 
 #[tauri::command]
 pub fn parse_batch_file(path: String) -> Result<Vec<String>, String> {
+    use std::path::Path;
+
+    let path_obj = Path::new(&path);
+
+    // Reject absolute paths and path traversal
+    if path_obj.is_absolute() {
+        return Err("Absolute paths are not allowed for batch files".to_string());
+    }
+    for component in path_obj.components() {
+        if let std::path::Component::ParentDir = component {
+            return Err("Path traversal is not allowed in batch file paths".to_string());
+        }
+    }
+
+    // Verify the file is a regular file (not a symlink to /etc/passwd, etc.)
+    let metadata = std::fs::symlink_metadata(&path)
+        .map_err(|e| format!("Cannot access batch file: {}", e))?;
+    if !metadata.is_file() {
+        return Err("Batch file path must be a regular file".to_string());
+    }
+
     let content = std::fs::read_to_string(&path)
         .map_err(|e| format!("Read error: {}", e))?;
     let mut urls = Vec::new();

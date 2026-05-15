@@ -246,7 +246,7 @@ impl PlatformDownloader for BlueskyDownloader {
                     "[bluesky] native failed: {}, trying yt-dlp fallback",
                     native_err
                 );
-                self.fallback_ytdlp(url).await.map_err(|_| native_err)
+                self.fallback_ytdlp(url).await.map_err(|e| anyhow!("native: {}; fallback: {}", native_err, e))
             }
         }
     }

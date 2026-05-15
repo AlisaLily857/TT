@@ -1461,6 +1461,16 @@ async fn fetch_and_cache_info(
         downloader.get_media_info(url).await?
     };
 
+    // Clean up IN_FLIGHT_FETCHES entry if no other tasks are waiting for this URL
+    {
+        let mut map = in_flight_map().lock().await;
+        if let Some(arc) = map.get(url) {
+            if Arc::strong_count(arc) <= 2 {
+                map.remove(url);
+            }
+        }
+    }
+
     let mut cache = info_cache().lock().await;
     cache.insert(
         url.to_string(),

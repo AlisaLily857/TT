@@ -38,7 +38,7 @@ impl TikTokDownloader {
             builder = builder.cookie_store(true);
         }
 
-        let client = builder.build().unwrap_or_default();
+        let client = builder.build().map_err(|e| anyhow!("Failed to build HTTP client: {}", e))?;
         Self {
             client,
             captured_cookies: Arc::new(tokio::sync::Mutex::new(None)),

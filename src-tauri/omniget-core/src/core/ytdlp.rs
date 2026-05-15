@@ -177,11 +177,20 @@ fn manual_cookie_header_setting() -> Option<String> {
         return None;
     }
 
-    let parsed = crate::core::cookie_parser::parse_cookie_input(trimmed, "");
+    // Strip control characters to prevent header injection
+    let sanitized: String = trimmed
+        .chars()
+        .filter(|c| !c.is_control())
+        .collect();
+    if sanitized.is_empty() {
+        return None;
+    }
+
+    let parsed = crate::core::cookie_parser::parse_cookie_input(&sanitized, "");
     if !parsed.cookie_string.trim().is_empty() {
         Some(parsed.cookie_string)
     } else {
-        Some(trimmed.to_string())
+        Some(sanitized)
     }
 }
 
@@ -277,14 +286,29 @@ pub async fn check_ytdlp_update(ytdlp: &Path) -> anyhow::Result<bool> {
     }
 
     let ytdlp = ytdlp.to_path_buf();
-    let output = tokio::task::spawn_blocking(move || {
-        crate::core::process::ytdlp_std_command(&ytdlp)
-            .args(["--update-to", "nightly"])
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
-            .output()
-    })
-    .await??;
+    let result = tokio::time::timeout(
+        std::time::Duration::from_secs(120),
+        tokio::task::spawn_blocking(move || {
+            crate::core::process::ytdlp_std_command(&ytdlp)
+                .args(["--update-to", "nightly"])
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped())
+                .output()
+        }),
+    )
+    .await;
+
+    let output = match result {
+        Ok(Ok(output)) => output,
+        Ok(Err(e)) => {
+            YTDLP_UPDATE_CHECKED.store(false, Ordering::Relaxed);
+            return Err(anyhow!("yt-dlp update check failed: {}", e));
+        }
+        Err(_) => {
+            YTDLP_UPDATE_CHECKED.store(false, Ordering::Relaxed);
+            return Err(anyhow!("yt-dlp update check timed out"));
+        }
+    };
 
     let stdout = String::from_utf8_lossy(&output.stdout);
     let stderr = String::from_utf8_lossy(&output.stderr);
@@ -308,7 +332,8 @@ fn proxy_args() -> Vec<String> {
 
 fn has_explicit_cookie_header(args: &[String]) -> bool {
     args.windows(2).any(|pair| {
-        pair[0] == "--add-headers" && pair[1].to_ascii_lowercase().starts_with("cookie:")
+        (pair[0] == "--add-headers" || pair[0] == "--add-header")
+            && pair[1].to_ascii_lowercase().starts_with("cookie:")
     })
 }
 
@@ -423,11 +448,19 @@ fn resolve_absolute_path(bin_name: &str) -> PathBuf {
         .output()
     {
         if output.status.success() {
-            if let Some(line) = String::from_utf8_lossy(&output.stdout).lines().next() {
+            for line in String::from_utf8_lossy(&output.stdout).lines() {
                 let path = line.trim();
-                if !path.is_empty() {
-                    return PathBuf::from(path);
+                if path.is_empty() {
+                    continue;
                 }
+                #[cfg(target_os = "windows")]
+                {
+                    let lower = path.to_lowercase();
+                    if lower.ends_with(".bat") || lower.ends_with(".cmd") || lower.ends_with(".ps1") {
+                        continue;
+                    }
+                }
+                return PathBuf::from(path);
             }
         }
     }
@@ -645,7 +678,7 @@ async fn check_ytdlp_freshness(path: &Path) {
                         return;
                     }
                     tracing::info!("yt-dlp is older than 2 days, updating in background");
-                    std::thread::Builder::new()
+                    let spawn_result = std::thread::Builder::new()
                         .name("ytdlp-update".into())
                         .spawn(|| {
                             let rt = tokio::runtime::Builder::new_current_thread()
@@ -659,8 +692,11 @@ async fn check_ytdlp_freshness(path: &Path) {
                                 }
                                 YTDLP_UPDATING.store(false, Ordering::SeqCst);
                             });
-                        })
-                        .ok();
+                        });
+                    if spawn_result.is_err() {
+                        tracing::warn!("Failed to spawn ytdlp-update thread");
+                        YTDLP_UPDATING.store(false, Ordering::SeqCst);
+                    }
                 }
             }
         }
@@ -722,6 +758,8 @@ fn extension_cookie_file() -> Option<std::path::PathBuf> {
         return None;
     }
     let copy = source.with_file_name("chrome-extension-cookies-session.txt");
+    // Remove stale copy before creating a new one
+    let _ = std::fs::remove_file(&copy);
     std::fs::copy(&source, &copy).ok()?;
     Some(copy)
 }
@@ -938,7 +976,7 @@ pub async fn get_video_info(
         args.extend(extra_flags.iter().cloned());
         args.push(url.to_string());
 
-        let child = crate::core::process::ytdlp_command(ytdlp)
+        let mut child = crate::core::process::ytdlp_command(ytdlp)
             .args(&args)
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -950,17 +988,23 @@ pub async fn get_video_info(
             attempt + 1
         );
 
-        let result =
-            tokio::time::timeout(std::time::Duration::from_secs(60), child.wait_with_output())
-                .await
-                .map_err(|_| {
-                    tracing::debug!("[perf] get_video_info took {:?}", _timer_start.elapsed());
-                    anyhow!("Timeout fetching video info (60s)")
-                })?
-                .map_err(|e| {
-                    tracing::debug!("[perf] get_video_info took {:?}", _timer_start.elapsed());
-                    anyhow!("Failed to run yt-dlp: {}", e)
-                })?;
+        let result = match tokio::time::timeout(
+            std::time::Duration::from_secs(60),
+            child.wait_with_output(),
+        )
+        .await
+        {
+            Ok(Ok(output)) => output,
+            Ok(Err(e)) => {
+                tracing::debug!("[perf] get_video_info took {:?}", _timer_start.elapsed());
+                return Err(anyhow!("Failed to run yt-dlp: {}", e));
+            }
+            Err(_) => {
+                let _ = child.kill().await;
+                tracing::debug!("[perf] get_video_info took {:?}", _timer_start.elapsed());
+                return Err(anyhow!("Timeout fetching video info (60s)"));
+            }
+        };
 
         tracing::debug!(
             "[perf] get_video_info: yt-dlp process exited at {:?} (attempt {})",
@@ -1057,17 +1101,28 @@ pub async fn get_playlist_info(
     args.extend(extra_flags.iter().cloned());
     args.push(url.to_string());
 
-    let output = tokio::time::timeout(
+    let mut child = crate::core::process::ytdlp_command(ytdlp)
+        .args(&args)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| anyhow!("Failed to run yt-dlp: {}", e))?;
+
+    let output = match tokio::time::timeout(
         std::time::Duration::from_secs(120),
-        crate::core::process::ytdlp_command(ytdlp)
-            .args(&args)
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
-            .output(),
+        child.wait_with_output(),
     )
     .await
-    .map_err(|_| anyhow!("Timeout fetching playlist (120s)"))?
-    .map_err(|e| anyhow!("Failed to run yt-dlp: {}", e))?;
+    {
+        Ok(Ok(output)) => output,
+        Ok(Err(e)) => {
+            return Err(anyhow!("Failed to run yt-dlp: {}", e));
+        }
+        Err(_) => {
+            let _ = child.kill().await;
+            return Err(anyhow!("Timeout fetching playlist (120s)"));
+        }
+    };
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
@@ -1255,6 +1310,13 @@ pub async fn download_video(
     let template = filename_template
         .map(|t| t.to_string())
         .unwrap_or_else(|| format!("%(title).{}s [%(id)s].%(ext)s", max_name));
+
+    if !crate::core::url_validator::is_filename_template_safe(&template) {
+        return Err(anyhow!(
+            "filename_template contains unsafe characters or path traversal sequences"
+        ));
+    }
+
     let output_template = output_dir.join(&template).to_string_lossy().to_string();
 
     std::fs::create_dir_all(output_dir)?;
@@ -1530,7 +1592,8 @@ pub async fn download_video(
         let mut lines = reader.lines();
 
         let progress_tx = progress.clone();
-        let captured_path: Arc<Mutex<Option<PathBuf>>> = Arc::new(Mutex::new(None));
+        let captured_path: Arc<tokio::sync::Mutex<Option<PathBuf>>> =
+            Arc::new(tokio::sync::Mutex::new(None));
         let captured_path_writer = captured_path.clone();
         let log_id = log_hook::current_download_id();
 
@@ -1563,7 +1626,7 @@ pub async fn download_video(
                         matches!(ext.as_str(), "vtt" | "srt" | "ass" | "ssa" | "sub" | "lrc");
                     if !is_subtitle {
                         phase += 1;
-                        let mut guard = captured_path_writer.lock().unwrap();
+                        let mut guard = captured_path_writer.lock().await;
                         *guard = Some(dest_path);
                     }
                 }
@@ -1645,7 +1708,7 @@ pub async fn download_video(
             let _ = progress.send(100.0).await;
 
             let file_path = {
-                let guard = captured_path.lock().unwrap();
+                let guard = captured_path.lock().await;
                 guard.clone()
             };
 

@@ -105,7 +105,7 @@ impl HlsDownloader {
 
         if let Ok((_, master)) = parse_master_playlist(m3u8_bytes) {
             if let Some(variant) = select_best_variant(&master, max_height.unwrap_or(720)) {
-                let variant_url = resolve_url(m3u8_url, &variant.uri);
+                let variant_url = resolve_url(m3u8_url, &variant.uri)?;
                 return self
                     .download_media_playlist(
                         &variant_url,
@@ -231,12 +231,10 @@ impl HlsDownloader {
         let errors: Arc<tokio::sync::Mutex<HashMap<String, u32>>> =
             Arc::new(tokio::sync::Mutex::new(HashMap::new()));
 
-        let segment_urls: Vec<(usize, String)> = playlist
-            .segments
-            .iter()
-            .enumerate()
-            .map(|(i, seg)| (i, resolve_url(m3u8_url, &seg.uri)))
-            .collect();
+        let mut segment_urls = Vec::with_capacity(playlist.segments.len());
+        for (i, seg) in playlist.segments.iter().enumerate() {
+            segment_urls.push((i, resolve_url(m3u8_url, &seg.uri)?));
+        }
 
         let client = &self.client;
         let errors_ref = &errors;
@@ -339,7 +337,7 @@ impl HlsDownloader {
                 match key.method {
                     m3u8_rs::KeyMethod::AES128 => {
                         if let Some(uri) = &key.uri {
-                            let key_url = resolve_url(m3u8_url, uri);
+                            let key_url = resolve_url(m3u8_url, uri)?;
                             let key_bytes = self.fetch_key_with_retry(&key_url, referer, 3).await?;
                             let iv = key.iv.as_ref().map(|iv_str| parse_hex_iv(iv_str));
                             return Ok(Some(EncryptionInfo { key_bytes, iv }));
@@ -425,9 +423,15 @@ fn select_best_variant(master: &MasterPlaylist, max_height: u32) -> Option<&Vari
     best.or_else(|| sorted.first().copied())
 }
 
-fn resolve_url(base: &str, relative: &str) -> String {
+fn resolve_url(base: &str, relative: &str) -> anyhow::Result<String> {
     if relative.starts_with("http://") || relative.starts_with("https://") {
-        return relative.to_string();
+        if !crate::core::url_validator::is_url_safe_for_download(relative) {
+            return Err(anyhow::anyhow!(
+                "Resolved HLS URL is not safe for download: {}",
+                relative
+            ));
+        }
+        return Ok(relative.to_string());
     }
 
     let (base_path, query) = match base.find('?') {
@@ -435,16 +439,28 @@ fn resolve_url(base: &str, relative: &str) -> String {
         None => (base, None),
     };
 
+    // Strip fragment from relative before resolving
+    let relative_no_frag = relative.split('#').next().unwrap_or(relative);
+
     let resolved = if let Some(pos) = base_path.rfind('/') {
-        format!("{}/{}", &base_path[..pos], relative)
+        format!("{}/{}", &base_path[..pos], relative_no_frag)
     } else {
-        relative.to_string()
+        relative_no_frag.to_string()
     };
 
-    match query {
-        Some(q) if !relative.contains('?') => format!("{}{}", resolved, q),
+    let result = match query {
+        Some(q) if !relative_no_frag.contains('?') => format!("{}{}", resolved, q),
         _ => resolved,
+    };
+
+    if !crate::core::url_validator::is_url_safe_for_download(&result) {
+        return Err(anyhow::anyhow!(
+            "Resolved HLS URL is not safe for download: {}",
+            result
+        ));
     }
+
+    Ok(result)
 }
 
 async fn write_segments_ordered(
@@ -588,7 +604,8 @@ mod tests {
             resolve_url(
                 "https://cdn.example.com/path/master.m3u8",
                 "https://other.com/video.ts"
-            ),
+            )
+            .unwrap(),
             "https://other.com/video.ts"
         );
     }
@@ -596,7 +613,7 @@ mod tests {
     #[test]
     fn resolve_url_relative() {
         assert_eq!(
-            resolve_url("https://cdn.example.com/path/master.m3u8", "segment0.ts"),
+            resolve_url("https://cdn.example.com/path/master.m3u8", "segment0.ts").unwrap(),
             "https://cdn.example.com/path/segment0.ts"
         );
     }
@@ -607,7 +624,8 @@ mod tests {
             resolve_url(
                 "https://cdn.example.com/path/master.m3u8?token=abc",
                 "segment0.ts"
-            ),
+            )
+            .unwrap(),
             "https://cdn.example.com/path/segment0.ts?token=abc"
         );
     }
@@ -618,14 +636,29 @@ mod tests {
             resolve_url(
                 "https://cdn.example.com/path/master.m3u8?token=abc",
                 "segment0.ts?key=123"
-            ),
+            )
+            .unwrap(),
             "https://cdn.example.com/path/segment0.ts?key=123"
         );
     }
 
     #[test]
     fn resolve_url_no_slash_in_base() {
-        assert_eq!(resolve_url("master.m3u8", "segment0.ts"), "segment0.ts");
+        assert_eq!(
+            resolve_url("master.m3u8", "segment0.ts").unwrap(),
+            "segment0.ts"
+        );
+    }
+
+    #[test]
+    fn resolve_url_rejects_private_ip() {
+        assert!(
+            resolve_url(
+                "https://cdn.example.com/path/master.m3u8",
+                "https://192.168.1.1/segment.ts"
+            )
+            .is_err()
+        );
     }
 
     #[test]

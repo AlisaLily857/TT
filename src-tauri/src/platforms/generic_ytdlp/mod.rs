@@ -234,7 +234,10 @@ impl PlatformDownloader for GenericYtdlpDownloader {
     fn can_handle(&self, url: &str) -> bool {
         if let Ok(parsed) = url::Url::parse(url) {
             let scheme = parsed.scheme();
-            return scheme == "http" || scheme == "https";
+            if scheme != "http" && scheme != "https" {
+                return false;
+            }
+            return omniget_core::core::url_validator::is_url_safe_for_download(url);
         }
         false
     }
@@ -340,7 +343,7 @@ impl PlatformDownloader for GenericYtdlpDownloader {
                 builder = builder.cookie_provider(jar);
             }
 
-            let client = builder.build().unwrap_or_default();
+            let client = builder.build().map_err(|e| anyhow!("Failed to build HTTP client: {}", e))?;
             let downloader = HlsDownloader::with_client(client)
                 .with_user_agent_override(opts.user_agent.clone());
             let _ = progress.send(0.0).await;
@@ -389,7 +392,7 @@ impl PlatformDownloader for GenericYtdlpDownloader {
                 builder = builder.cookie_provider(jar);
             }
 
-            let client = builder.build().unwrap_or_default();
+            let client = builder.build().map_err(|e| anyhow!("Failed to build HTTP client: {}", e))?;
 
             let mut headers = reqwest::header::HeaderMap::new();
             if let Some(ref r) = opts.referer {

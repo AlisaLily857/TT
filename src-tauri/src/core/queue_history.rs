@@ -95,7 +95,7 @@ pub fn init_from_disk() {
             return;
         }
     };
-    let mut guard = store().lock().unwrap();
+    let mut guard = store().lock().unwrap_or_else(|e| e.into_inner());
     guard.clear();
     for entry in parsed.entries.into_iter().take(MAX_HISTORY_ENTRIES) {
         guard.push_back(entry);
@@ -103,7 +103,7 @@ pub fn init_from_disk() {
 }
 
 pub fn record(entry: HistoryEntry) {
-    let mut guard = store().lock().unwrap();
+    let mut guard = store().lock().unwrap_or_else(|e| e.into_inner());
     guard.retain(|e| e.id != entry.id);
     guard.push_back(entry);
     while guard.len() > MAX_HISTORY_ENTRIES {
@@ -113,12 +113,12 @@ pub fn record(entry: HistoryEntry) {
 }
 
 pub fn list() -> Vec<HistoryEntry> {
-    let guard = store().lock().unwrap();
+    let guard = store().lock().unwrap_or_else(|e| e.into_inner());
     guard.iter().rev().cloned().collect()
 }
 
 pub fn remove(id: u64) {
-    let mut guard = store().lock().unwrap();
+    let mut guard = store().lock().unwrap_or_else(|e| e.into_inner());
     let before = guard.len();
     guard.retain(|e| e.id != id);
     if guard.len() != before {
@@ -127,7 +127,7 @@ pub fn remove(id: u64) {
 }
 
 pub fn clear_all() {
-    let mut guard = store().lock().unwrap();
+    let mut guard = store().lock().unwrap_or_else(|e| e.into_inner());
     guard.clear();
     write_to_disk(&guard);
 }

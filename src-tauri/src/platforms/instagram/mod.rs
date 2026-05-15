@@ -63,7 +63,7 @@ impl InstagramDownloader {
             builder = builder.cookie_provider(jar);
         }
 
-        let client = builder.build().unwrap_or_default();
+        let client = builder.build().map_err(|e| anyhow!("Failed to build HTTP client: {}", e))?;
 
         let redirect_client =
             crate::core::http_client::apply_global_proxy(reqwest::Client::builder())

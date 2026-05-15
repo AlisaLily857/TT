@@ -47,7 +47,7 @@ impl PinterestDownloader {
             builder = builder.cookie_provider(jar);
         }
 
-        let client = builder.build().unwrap_or_default();
+        let client = builder.build().map_err(|e| anyhow!("Failed to build HTTP client: {}", e))?;
         Self { client }
     }
 
@@ -213,7 +213,7 @@ impl PlatformDownloader for PinterestDownloader {
                     "[pinterest] native failed: {}, trying yt-dlp fallback",
                     native_err
                 );
-                self.fallback_ytdlp(url).await.map_err(|_| native_err)
+                self.fallback_ytdlp(url).await.map_err(|e| anyhow!("native: {}; fallback: {}", native_err, e))
             }
         }
     }

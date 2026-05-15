@@ -87,7 +87,7 @@ pub fn init_from_disk() {
             return;
         }
     };
-    let mut guard = store().lock().unwrap();
+    let mut guard = store().lock().unwrap_or_else(|e| e.into_inner());
     guard.clear();
     for item in parsed.items {
         guard.insert(item.id, item);
@@ -95,25 +95,25 @@ pub fn init_from_disk() {
 }
 
 pub fn persist(item: RecoveryItem) {
-    let mut guard = store().lock().unwrap();
+    let mut guard = store().lock().unwrap_or_else(|e| e.into_inner());
     guard.insert(item.id, item);
     write_to_disk(&guard);
 }
 
 pub fn remove(id: u64) {
-    let mut guard = store().lock().unwrap();
+    let mut guard = store().lock().unwrap_or_else(|e| e.into_inner());
     if guard.remove(&id).is_some() {
         write_to_disk(&guard);
     }
 }
 
 pub fn list() -> Vec<RecoveryItem> {
-    let guard = store().lock().unwrap();
+    let guard = store().lock().unwrap_or_else(|e| e.into_inner());
     guard.values().cloned().collect()
 }
 
 pub fn clear_all() {
-    let mut guard = store().lock().unwrap();
+    let mut guard = store().lock().unwrap_or_else(|e| e.into_inner());
     guard.clear();
     write_to_disk(&guard);
 }

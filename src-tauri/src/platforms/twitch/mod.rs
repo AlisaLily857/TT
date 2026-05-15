@@ -119,12 +119,12 @@ impl TwitchClipsDownloader {
     }
 
     async fn fetch_clip_metadata(&self, slug: &str) -> anyhow::Result<ClipMetadata> {
-        let query = format!(
-            r#"{{ clip(slug: "{}") {{ broadcaster {{ login }} curator {{ login }} durationSeconds id medium: thumbnailURL(width: 480, height: 272) title videoQualities {{ quality sourceURL }} }} }}"#,
-            slug
-        );
+        let query = r#"query ClipMetadata($slug: ID!) { clip(slug: $slug) { broadcaster { login } curator { login } durationSeconds id medium: thumbnailURL(width: 480, height: 272) title videoQualities { quality sourceURL } } }"#;
 
-        let body = serde_json::json!({ "query": query });
+        let body = serde_json::json!({
+            "query": query,
+            "variables": { "slug": slug }
+        });
 
         let response = self
             .client
@@ -285,7 +285,7 @@ impl PlatformDownloader for TwitchClipsDownloader {
                     "[twitch] native failed: {}, trying yt-dlp fallback",
                     native_err
                 );
-                self.fallback_ytdlp(url).await.map_err(|_| native_err)
+                self.fallback_ytdlp(url).await.map_err(|e| anyhow!("native: {}; fallback: {}", native_err, e))
             }
         }
     }

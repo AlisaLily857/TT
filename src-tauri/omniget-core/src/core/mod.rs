@@ -19,4 +19,5 @@ pub mod pokemon_names;
 pub mod process;
 pub mod redirect;
 pub mod registry;
+pub mod url_validator;
 pub mod ytdlp;

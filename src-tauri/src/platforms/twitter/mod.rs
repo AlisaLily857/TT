@@ -182,7 +182,7 @@ impl TwitterDownloader {
             builder = builder.cookie_provider(jar);
         }
 
-        let client = builder.build().unwrap_or_default();
+        let client = builder.build().map_err(|e| anyhow!("Failed to build HTTP client: {}", e))?;
         Self {
             client,
             guest_token: Arc::new(Mutex::new(None)),

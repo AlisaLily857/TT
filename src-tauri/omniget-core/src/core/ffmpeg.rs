@@ -339,7 +339,7 @@ pub async fn convert(
     let mut child = crate::core::process::command("ffmpeg")
         .args(&args)
         .stdout(std::process::Stdio::piped())
-        .stderr(std::process::Stdio::piped())
+        .stderr(std::process::Stdio::null())
         .spawn()
         .map_err(|e| anyhow!("Failed to start ffmpeg: {}", e))?;
 
