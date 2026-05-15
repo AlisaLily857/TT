@@ -855,7 +855,12 @@ impl Drop for ActiveJobSlot {
         let app = self.app.clone();
         let queue = self.queue.clone();
         let item_id = self.item_id;
-        tokio::spawn(async move {
+        // Use Handle::try_current to avoid panicking when the runtime is shutting down
+        let Ok(handle) = tokio::runtime::Handle::try_current() else {
+            tracing::warn!("[queue] ActiveJobSlot drop: no active Tokio runtime, skipping cleanup");
+            return;
+        };
+        let _ = handle.spawn(async move {
             let state = {
                 let mut q = queue.lock().await;
                 let still_active = q

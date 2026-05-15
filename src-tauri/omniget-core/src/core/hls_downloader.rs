@@ -476,7 +476,18 @@ async fn write_segments_ordered(
     let mut next_expected: usize = 0;
     let mut pending: BTreeMap<usize, Vec<u8>> = BTreeMap::new();
 
+    // Limit out-of-order buffering to prevent unbounded memory growth
+    const MAX_PENDING_SEGMENTS: usize = 128;
+
     while let Some((idx, data)) = rx.recv().await {
+        // Reject segments that arrive too far ahead
+        if idx > next_expected + MAX_PENDING_SEGMENTS {
+            anyhow::bail!(
+                "Segment {} arrived too far ahead of next expected ({}). Possible malicious playlist.",
+                idx,
+                next_expected
+            );
+        }
         pending.insert(idx, data);
 
         while let Some(segment_data) = pending.remove(&next_expected) {
