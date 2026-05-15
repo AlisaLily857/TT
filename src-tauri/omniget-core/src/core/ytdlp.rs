@@ -629,7 +629,27 @@ async fn download_ytdlp_binary() -> anyhow::Result<PathBuf> {
         ));
     }
 
+    // Limit download size to 50 MB to prevent OOM from infinite/malicious responses
+    const MAX_YTDLP_SIZE: usize = 50 * 1024 * 1024;
+    let content_length = response.content_length();
+    if let Some(len) = content_length {
+        if len > MAX_YTDLP_SIZE as u64 {
+            return Err(anyhow!(
+                "yt-dlp download too large: {} bytes (max {})",
+                len,
+                MAX_YTDLP_SIZE
+            ));
+        }
+    }
+
     let bytes = response.bytes().await?;
+    if bytes.len() > MAX_YTDLP_SIZE {
+        return Err(anyhow!(
+            "yt-dlp download too large: {} bytes (max {})",
+            bytes.len(),
+            MAX_YTDLP_SIZE
+        ));
+    }
     let target_clone = target.clone();
     tokio::task::spawn_blocking(move || std::fs::write(&target_clone, &bytes))
         .await

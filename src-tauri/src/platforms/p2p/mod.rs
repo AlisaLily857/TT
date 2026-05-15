@@ -180,6 +180,15 @@ impl PlatformDownloader for P2pDownloader {
             }
         }
 
+        if received != file_size {
+            let _ = tokio::fs::remove_file(&output_path).await;
+            anyhow::bail!(
+                "Incomplete download: received {} of {} bytes",
+                received,
+                file_size
+            );
+        }
+
         file.flush().await?;
         drop(file);
 

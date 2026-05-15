@@ -242,8 +242,27 @@ async fn download_ffmpeg() -> anyhow::Result<PathBuf> {
             ));
         }
 
+        // Limit download size to 200 MB to prevent OOM
+        const MAX_FFMPEG_SIZE: usize = 200 * 1024 * 1024;
+        if let Some(len) = response.content_length() {
+            if len > MAX_FFMPEG_SIZE as u64 {
+                return Err(anyhow!(
+                    "FFmpeg download too large: {} bytes (max {})",
+                    len,
+                    MAX_FFMPEG_SIZE
+                ));
+            }
+        }
+
         let temp_path = bin_dir.join(".ffmpeg_download.tmp");
         let bytes = response.bytes().await?;
+        if bytes.len() > MAX_FFMPEG_SIZE {
+            return Err(anyhow!(
+                "FFmpeg download too large: {} bytes (max {})",
+                bytes.len(),
+                MAX_FFMPEG_SIZE
+            ));
+        }
         let data = bytes.to_vec();
         let temp_clone = temp_path.clone();
         tokio::task::spawn_blocking(move || std::fs::write(&temp_clone, &data))
