@@ -243,7 +243,7 @@ async fn poll_for_cookie(
 async fn extract_cookies(
     window: &tauri::WebviewWindow,
     default_domain: &str,
-    domains: &[String],
+    _domains: &[String],
 ) -> Vec<AuthCookie> {
     #[cfg(windows)]
     {

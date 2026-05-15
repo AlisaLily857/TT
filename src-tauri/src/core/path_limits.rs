@@ -42,8 +42,6 @@ pub fn validate_output_dir(output_dir: &str) -> Result<(), PathLimitError> {
 /// Validates that output_dir does not contain path-traversal sequences
 /// and resolves within an allowed base directory.
 pub fn sanitize_output_dir(output_dir: &str, base_dir: &std::path::Path) -> Result<std::path::PathBuf, String> {
-    use std::path::Path;
-
     if output_dir.is_empty() {
         return Err("Output directory cannot be empty".to_string());
     }
@@ -73,16 +71,18 @@ pub fn sanitize_output_dir(output_dir: &str, base_dir: &std::path::Path) -> Resu
     let resolved = base_dir.join(output_dir);
     let canonical_base = base_dir.canonicalize()
         .map_err(|e| format!("Failed to canonicalize base dir: {}", e))?;
-    let canonical_resolved = resolved.canonicalize()
-        .or_else(|_| {
+    let canonical_resolved = match resolved.canonicalize() {
+        Ok(p) => p,
+        Err(_) => {
             // Path may not exist yet; canonicalize its parent and append the final component
             let parent = resolved.parent().unwrap_or(base_dir);
             let file_name = resolved.file_name()
                 .ok_or_else(|| "Invalid output directory".to_string())?;
             let canonical_parent = parent.canonicalize()
                 .map_err(|e| format!("Failed to canonicalize parent: {}", e))?;
-            Ok::<_, String>(canonical_parent.join(file_name))
-        })?;
+            canonical_parent.join(file_name)
+        }
+    };
 
     if !canonical_resolved.starts_with(&canonical_base) {
         return Err("Output directory escapes the allowed base directory".to_string());

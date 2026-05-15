@@ -54,7 +54,7 @@ impl RedditDownloader {
             builder = builder.cookie_provider(jar);
         }
 
-        let client = builder.build().map_err(|e| anyhow!("Failed to build HTTP client: {}", e))?;
+        let client = builder.build().expect("Failed to build HTTP client");
         Self { client }
     }
 
