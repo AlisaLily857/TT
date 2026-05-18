@@ -453,11 +453,14 @@ fn resolve_url(base: &str, relative: &str) -> anyhow::Result<String> {
         _ => resolved,
     };
 
-    if !crate::core::url_validator::is_url_safe_for_download(&result) {
-        return Err(anyhow::anyhow!(
-            "Resolved HLS URL is not safe for download: {}",
-            result
-        ));
+    // Only validate absolute URLs; relative paths inherit the base domain
+    if result.starts_with("http://") || result.starts_with("https://") {
+        if !crate::core::url_validator::is_url_safe_for_download(&result) {
+            return Err(anyhow::anyhow!(
+                "Resolved HLS URL is not safe for download: {}",
+                result
+            ));
+        }
     }
 
     Ok(result)
